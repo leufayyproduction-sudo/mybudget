@@ -8,7 +8,7 @@
 - Alokasi goal bukan transaksi; tidak mengurangi saldo aktual.
 - Token: putih, blue 50–900 (#2563eb utama), navy/slate; status green/amber/red.
 - Font sans, nominal tabular; spacing kelipatan 4; motion 160ms.
-- Logo melalui komponen Wordmark; belum ada logo resmi.
+- Logo resmi pengguna: public/brand/mybudget-logo.png; Wordmark terpusat; app/icon.png.
 - Data demo berlabel, tersimpan lokal; jangan dianggap data Supabase.
 - Jangan expose service role; RLS wajib untuk tabel pengguna.
 - npm run dev / npm run build / npm run typecheck / npm test.

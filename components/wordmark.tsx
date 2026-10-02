@@ -1,2 +1,2 @@
-import { Wallet } from 'lucide-react';
-export default function Wordmark(){return <span className="wordmark"><span className="brand-icon"><Wallet size={21} aria-hidden="true"/></span>My Budget<span className="brand-dot">.</span></span>;}
+import Image from 'next/image';
+export default function Wordmark(){return <span className="wordmark"><Image className="official-logo" src="/brand/mybudget-logo.png" alt="My Budget" width={666} height={442} priority/></span>;}
