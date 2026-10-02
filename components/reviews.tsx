@@ -10,7 +10,7 @@ export default function Reviews({onLogin,demo=false}:{onLogin?:()=>void;demo?:bo
   setUnavailable(false);
   if(!supabase){const stored:Review[]=JSON.parse(localStorage.getItem('mybudget-demo-review')||'[]');setReviews(stored);setOwn(stored[0]||null);setStats({total:stored.length,average:stored[0]?.rating||0,counts:[1,2,3,4,5].map(r=>stored.filter(v=>v.rating===r).length)});setLoading(false);return;}
   const {data:{session}}=await supabase.auth.getSession();setUser(session?.user.id||null);
-  const [list,totals,mine]=await Promise.all([supabase.from('public_reviews').select('*').order('created_at',{ascending:false}).limit(20),supabase.rpc('review_summary'),session?supabase.from('reviews').select('*').eq('user_id',session.user.id).maybeSingle():Promise.resolve({data:null,error:null})]);
+  const [list,totals,mine]=await Promise.all([supabase.rpc('list_public_reviews',{p_limit:20}),supabase.rpc('review_summary'),session?supabase.from('reviews').select('*').eq('user_id',session.user.id).maybeSingle():Promise.resolve({data:null,error:null})]);
   if(list.error||totals.error||mine.error)throw new Error('Ulasan belum dapat dimuat. Coba lagi nanti.');
   setReviews(list.data||[]);setOwn(mine.data);const s=totals.data?.[0];setStats(s?{total:Number(s.total),average:Number(s.average),counts:s.counts.map(Number)}:{total:0,average:0,counts:[0,0,0,0,0]});setLoading(false);
  }

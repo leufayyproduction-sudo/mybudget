@@ -1,0 +1,6 @@
+{
+  "checked_at": "2026-10-02T15:41:58.798Z",
+  "status": "blocked",
+  "checks": [],
+  "reason": "RPC baru belum dapat diakses. Jalankan migration 003 lalu ulangi."
+}

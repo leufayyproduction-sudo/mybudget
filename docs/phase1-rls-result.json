@@ -1,12 +1,32 @@
 {
-  "checked_at": "2026-10-02T15:10:46.179Z",
+  "checked_at": "2026-10-02T15:41:54.163Z",
   "status": "blocked",
   "checks": [
     {
       "label": "Supabase Auth sungguhan dapat dijangkau dengan public key",
       "passed": true
+    },
+    {
+      "label": "profiles: akses anonim dibatasi",
+      "passed": true
+    },
+    {
+      "label": "categories: akses anonim dibatasi",
+      "passed": true
+    },
+    {
+      "label": "transactions: akses anonim dibatasi",
+      "passed": true
+    },
+    {
+      "label": "budgets: akses anonim dibatasi",
+      "passed": true
+    },
+    {
+      "label": "goals: akses anonim dibatasi",
+      "passed": true
     }
   ],
   "cleanup": "not_needed",
-  "reason": "Tabel profiles belum tersedia; jalankan migration 001."
+  "reason": "Isi variabel lokal: RLS_TEST_A_EMAIL, RLS_TEST_A_PASSWORD, RLS_TEST_B_EMAIL, RLS_TEST_B_PASSWORD."
 }
