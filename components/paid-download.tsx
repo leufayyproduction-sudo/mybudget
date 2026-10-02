@@ -1,0 +1,3 @@
+'use client';
+import {useState} from 'react';import {orderApi} from '@/lib/order-api';
+export default function PaidDownload({product}:{product:string}){const [busy,setBusy]=useState(false),[error,setError]=useState('');return <div><button className="button secondary" disabled={busy} onClick={async()=>{setBusy(true);setError('');try{const r=await orderApi(`/api/downloads/${product}`);const a=document.createElement('a');a.href=r.url;a.rel='noopener noreferrer';a.click();}catch(e){setError((e as Error).message);}finally{setBusy(false);}}}>{busy?'Memeriksa akses…':'Unduh file privat'}</button>{error&&<small role="alert" className="form-error">{error}</small>}</div>;}

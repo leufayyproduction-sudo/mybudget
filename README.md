@@ -23,7 +23,6 @@ Urutan migration: 001 → 002 → 003 → 004 → **005_manual_checkout.sql**. J
 
 Ekspor CSV Plus/Pro ada di `/api/exports/transactions`: hak akses dicek server lewat get_entitlement, SELECT memakai RLS pemilik, pagination 1.000 per query, output aman terhadap formula spreadsheet. Hindari mengedit transaksi bersamaan dengan ekspor besar; query per halaman bukan snapshot satu transaksi database.
 
-## Jalankan
 ### Admin pembelian — Sesi B
 Setelah migration 005, jalankan `006_admin_purchases.sql`. Buat admin pertama lewat SQL pemilik: `insert into public.admin_users(user_id) values ('UUID-AKUN-ADMIN') on conflict do nothing;`. UUID dari Authentication → Users. Jangan menjadikan akun pengujian admin permanen. Tidak ada service-role key atau role dari user_metadata.
 Masuk melalui beranda, buka `/admin/connect`, lalu klik buka akun yang sedang masuk. Server memverifikasi JWT dan is_admin, menyimpan access token saja dalam cookie HttpOnly SameSite Strict (30 menit), kemudian memeriksa akses lagi pada middleware, halaman dan setiap API/RPC. Saat token/cookie habis, buka koneksi admin lagi. Tombol Tutup sesi admin menghapus cookie. UI tidak menyimpan refresh token di cookie server.
@@ -31,6 +30,11 @@ Halaman `/admin` menampilkan ringkasan paid, daftar/filter, referensi duplikat, 
 `npm run verify:admin` menyiapkan `.rls-admin-test.sql` dan menguji penolakan non-admin. Jalankan SQL itu sebagai pemilik di SQL Editor; seluruh fixture/admin sementara di-rollback. Persetujuan paralel masih membutuhkan pengujian terpisah; tidak diklaim teruji oleh SQL berurutan ini. Log append-only, transaksi/budget/goal pengguna tidak mendapat policy admin.
 
 ## Jalankan
+### Produk, QRIS & file privat
+Setelah 006 jalankan `007_product_settings.sql`. Bucket digital-files privat (PDF/CSV/XLSX, 20 MB) dan site-assets publik untuk logo (JPG/PNG/WebP, 2 MB) dibuat migration; payment-proofs tetap privat. `/admin/settings` mengedit produk, promo, durasi, harga dan urutan. Early Access aktif wajib memiliki awal/akhir promo. Upload file tools sebelum mengaktifkannya; produk file bukan janji tools interaktif Phase 3.
+QRIS: pilih global/per produk, unggah gambar resmi DANA Bisnis (maksimal 5 MB), periksa tampilan dan nama merchant, isi instruksi, lalu simpan. Tidak ada QRIS bawaan/palsu atau edit payload. Pengaturan per produk yang enabled didahulukan dari global; disabled per produk berarti fallback global. Upload menghasilkan path baru, tidak menimpa gambar snapshot pesanan lama. Jangan menerima pembayaran sebelum merchant asli dan pengujian lengkap siap.
+Pembelian file paid membuka tombol unduh di riwayat Paket. Server memeriksa order paid milik pengguna, mencatat penerbitan hak unduh di download_logs, lalu signed URL 60 detik. Produk nonaktif tetap dapat diunduh pembeli lama. Log mencatat permintaan akses, bukan bukti file selesai ditransfer. Admin asset/configuration masuk audit. Storage dan database tidak satu transaksi; file yang diunggah tetapi belum disimpan dapat menjadi orphan privat/publik dan perlu dikelola pemilik proyek.
+
 Node.js 22+, `npm ci`, lalu `npm run dev`. Buka http://localhost:3000. Tanpa environment Supabase, klik **Coba demo interaktif**. Data demo tersimpan di localStorage browser ini; bukan akun atau penyimpanan aman untuk data sensitif. Landing memakai data contoh berlabel dan tidak memasukkannya ke akun.
 
 `npm run typecheck`, `npm test`, `npm run build`, `npm start`.
