@@ -1,0 +1,16 @@
+# My Budget
+- Scope sesi pertama: Phase 1 saja; baca PROGRESS.md sebelum melanjutkan.
+- Stack: Next.js App Router, TypeScript, Tailwind, Supabase Auth/Postgres.
+- UI: lucide-react, Recharts, Radix; form react-hook-form + zod.
+- app/: routes; components/: UI; lib/finance/: fungsi murni; supabase/: migration.
+- Semua nominal integer rupiah, format melalui Intl id-ID.
+- Saldo = saldo awal + pemasukan aktual - pengeluaran aktual.
+- Alokasi goal bukan transaksi; tidak mengurangi saldo aktual.
+- Token: warm off-white, charcoal, teal; status amber/red; radius 16px.
+- Font sans, nominal tabular; spacing kelipatan 4; motion 160ms.
+- Logo melalui komponen Wordmark; belum ada logo resmi.
+- Data demo berlabel, tersimpan lokal; jangan dianggap data Supabase.
+- Jangan expose service role; RLS wajib untuk tabel pengguna.
+- npm run dev / npm run build / npm run typecheck / npm test.
+- Commit kecil sesudah fitur stabil; update PROGRESS.md per fitur.
+- Jangan lanjut Phase 2 tanpa instruksi pengguna.
