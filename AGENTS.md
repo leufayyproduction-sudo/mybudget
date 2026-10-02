@@ -6,7 +6,7 @@
 - Semua nominal integer rupiah, format melalui Intl id-ID.
 - Saldo = saldo awal + pemasukan aktual - pengeluaran aktual.
 - Alokasi goal bukan transaksi; tidak mengurangi saldo aktual.
-- Token: warm off-white, charcoal, teal; status amber/red; radius 16px.
+- Token: putih, blue 50–900 (#2563eb utama), navy/slate; status green/amber/red.
 - Font sans, nominal tabular; spacing kelipatan 4; motion 160ms.
 - Logo melalui komponen Wordmark; belum ada logo resmi.
 - Data demo berlabel, tersimpan lokal; jangan dianggap data Supabase.

@@ -6,3 +6,7 @@ test('nominal kecil dan saldo awal tepat',()=>assert.deepEqual(summary(ts,10000,
 test('alokasi hanya memengaruhi aman dibelanjakan',()=>assert.equal(safeToSpend(ts,[{id:'b',category:'Makan',amount:10000,month:'2026-10',mandatory:true}],[{id:'g',name:'G',target:50000,saved:0,monthly:2000}],10000,'2026-10'),18000));
 test('goal nol dan tercapai',()=>{assert.equal(monthsToGoal({id:'g',name:'G',target:100,saved:0,monthly:0}),null);assert.equal(monthsToGoal({id:'g',name:'G',target:100,saved:100,monthly:0}),0);});
 test('rata-rata memakai tiga bulan selesai termasuk bulan kosong',()=>assert.equal(averageIncome(ts,'2026-11'),20000/3));
+test('budget lewat batas tidak dikurangkan lagi dari saldo',()=>assert.equal(safeToSpend(ts,[{id:'b',category:'Makan',amount:1000,month:'2026-10',mandatory:true}],[],10000,'2026-10'),25000));
+test('bulan lain tidak memengaruhi ringkasan bulan, tetapi saldo aktual tetap',()=>assert.deepEqual(summary(ts,0,'2026-09'),{income:0,expense:0,balance:15000}));
+test('target tercapai tidak lagi mengambil alokasi rencana',()=>assert.equal(safeToSpend(ts,[],[{id:'g',name:'G',target:100,saved:100,monthly:10000}],10000,'2026-10'),25000));
+test('rata-rata lintas tahun',()=>assert.equal(averageIncome([{...ts[0],date:'2025-12-01'}],'2026-02'),20000/3));

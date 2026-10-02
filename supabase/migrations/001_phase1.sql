@@ -8,7 +8,11 @@ create table public.profiles (
  and (data->>'opening')::numeric between 0 and 1000000000000
  and (data->>'fixed')::numeric between 0 and 1000000000000
  and (data->>'project')::numeric between 0 and 1000000000000
- and (data->>'projects')::numeric between 0 and 1000),
+ and (data->>'projects')::numeric between 0 and 1000
+ and (data->>'opening')::numeric=trunc((data->>'opening')::numeric)
+ and (data->>'fixed')::numeric=trunc((data->>'fixed')::numeric)
+ and (data->>'project')::numeric=trunc((data->>'project')::numeric)
+ and (data->>'projects')::numeric=trunc((data->>'projects')::numeric)),
  constraint profile_required check (data ?& array['name','pattern','purpose','opening','fixed','project','projects'])
 );
 create table public.categories (
@@ -24,7 +28,8 @@ create table public.transactions (
  and (data->>'amount')::numeric=trunc((data->>'amount')::numeric)
  and data->>'type' in ('income','expense') and length(data->>'description')<=180
  and data->>'category' in ('Makan & minum','Transportasi','Belanja','Tagihan','Kesehatan','Hiburan','Lainnya','Project','Gaji')
- and (data->>'date')::date<=current_date)
+ and data->>'date' ~ '^\d{4}-\d{2}-\d{2}$'
+ and (data->>'date')::date<=(now() at time zone 'Asia/Jakarta')::date)
 );
 create table public.budgets (
  id uuid primary key default gen_random_uuid(), user_id uuid not null references auth.users(id) on delete cascade,
@@ -63,3 +68,16 @@ create index transactions_owner on public.transactions(user_id);
 create index goals_owner on public.goals(user_id);
 grant select,insert,update,delete on public.profiles,public.categories,public.transactions,public.budgets,public.goals to authenticated;
 revoke all on public.profiles,public.categories,public.transactions,public.budgets,public.goals from anon;
+
+-- SQL CHECK treats null as valid; reject JSON null values explicitly.
+create function public.reject_null_finance_fields() returns trigger language plpgsql set search_path = '' as $$
+begin
+ if exists(select 1 from jsonb_each(new.data) as f where f.value='null'::jsonb) then
+   raise exception 'Financial fields must not be null';
+ end if;
+ return new;
+end $$;
+create trigger profiles_no_null before insert or update on public.profiles for each row execute function public.reject_null_finance_fields();
+create trigger transactions_no_null before insert or update on public.transactions for each row execute function public.reject_null_finance_fields();
+create trigger budgets_no_null before insert or update on public.budgets for each row execute function public.reject_null_finance_fields();
+create trigger goals_no_null before insert or update on public.goals for each row execute function public.reject_null_finance_fields();
