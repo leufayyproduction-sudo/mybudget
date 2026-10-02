@@ -1,5 +1,5 @@
 # My Budget
-- Scope sesi pertama: Phase 1 saja; baca PROGRESS.md sebelum melanjutkan.
+- Scope aktif: prasyarat RLS live Phase 1, lalu Phase 2 Sesi A saja jika lolos.
 - Stack: Next.js App Router, TypeScript, Tailwind, Supabase Auth/Postgres.
 - UI: lucide-react, Recharts, Radix; form react-hook-form + zod.
 - app/: routes; components/: UI; lib/finance/: fungsi murni; supabase/: migration.
@@ -14,3 +14,5 @@
 - npm run dev / npm run build / npm run typecheck / npm test.
 - Commit kecil sesudah fitur stabil; update PROGRESS.md per fitur.
 - Jangan lanjut Phase 2 tanpa instruksi pengguna.
+- Phase 2 diminta; jangan mulai fiturnya sebelum RLS dua akun live lolos.
+- RLS: node scripts/verify-phase1-rls.mjs; akun uji lokal .env.rls-test, tanpa service role.

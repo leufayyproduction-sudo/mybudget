@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-10-02T15:10:46.179Z",
+  "status": "blocked",
+  "checks": [
+    {
+      "label": "Supabase Auth sungguhan dapat dijangkau dengan public key",
+      "passed": true
+    }
+  ],
+  "cleanup": "not_needed",
+  "reason": "Tabel profiles belum tersedia; jalankan migration 001."
+}

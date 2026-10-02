@@ -1,4 +1,33 @@
 # Progress My Budget
+
+## Sesi aktif — prasyarat Phase 2 Sesi A
+- [doing] Verifikasi Phase 1 dengan Supabase sungguhan: BLOCKED sebelum RLS dua akun
+- [todo] Sesi A: Reports → produk/entitlement → checkout manual (belum mulai)
+- [todo] Sesi B: admin → pengaturan produk/QRIS → CMS → verifikasi (belum mulai)
+- Phase 3 tidak dimulai. Tidak ada pembayaran nyata atau deployment.
+
+### Sudah diuji
+- `npm test`: 12/12 finance tests lolos, termasuk data kosong, Rp20.000, saldo/alokasi negatif, goal nol/tercapai, pembulatan, lintas tahun.
+- `npm run verify:phase1-rls`: Auth Supabase sungguhan dapat dijangkau dengan public key.
+- Sintaks skrip verifikasi valid (`node --check`); .env.rls-test diabaikan git.
+- Typecheck dan production build lolos. Tidak ada perubahan UI pada sesi prasyarat ini.
+
+### Belum bisa diuji
+- API melaporkan tabel profiles belum tersedia (migration 001 belum terlihat pada proyek terhubung); skrip berhenti sebelum mutasi.
+- Pengguna menyatakan belum ada dua akun uji. RLS baca/update/delete/insert dua arah, composite FK, dan validasi DB belum dijalankan.
+- Semua fitur dan verifikasi Phase 2 belum dimulai. QRIS merchant, pembayaran sungguhan dan hosting produksi belum dikonfigurasi.
+- Hasil aman tanpa rahasia: docs/phase1-rls-result.json (status blocked, cleanup not_needed).
+
+### Keputusan yang diambil
+- Patuhi gate pengguna: jangan membangun Phase 2 sebelum RLS live dua akun lolos.
+- Verifikasi menggunakan anon/publishable key + dua akun khusus, bukan service_role/secret key.
+- Akun uji harus baru, email dikonfirmasi, tanpa onboarding; fixture sementara dibersihkan, akun Auth tidak dihapus.
+- Batas Free, perpanjangan entitlement, dan kedaluwarsa pesanan belum diimplementasikan/diklaim; ditetapkan pada slice Sesi A setelah gate lolos.
+- Hosting komersial memakai paket/provider yang mengizinkan komersial, tetap portabel dengan Next.js standar.
+
+Langkah berikutnya: jalankan 001_phase1.sql di Supabase SQL Editor pada database yang belum memiliki tabelnya, buat dua akun uji tanpa onboarding, isi .env.rls-test lokal dan RLS_TEST_ALLOW_FIXTURES=dedicated-test-accounts. Jalankan npm run verify:phase1-rls; hanya lanjut Sesi A jika status passed dan cleanup passed.
+
+## Riwayat pekerjaan sebelumnya
 - [done] Phase 1: fondasi + token + demo lokal kosong, landing dengan contoh berlabel
 - [done] Auth dan onboarding: Supabase client, register/login/logout/reset/konfirmasi
 - [done] Dashboard dan logika keuangan: saldo, aman dibelanjakan, rata-rata 3 bulan

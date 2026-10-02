@@ -34,6 +34,19 @@ RLS diberlakukan di semua tabel pribadi. Kategori awal memakai enum nama tetap; 
 Belum live. Target domain mybudget.biz.id perlu akses DNS dan konfigurasi hosting.
 Vercel Hobby hanya untuk penggunaan personal nonkomersial: https://vercel.com/docs/plans/hobby. Penawaran premium berbayar memerlukan paket/provider yang mengizinkan komersial. Gunakan `npm run build` + `npm start` pada host Node lain; tidak ada dependency khusus Vercel.
 
+### Hosting untuk penggunaan komersial
+Vercel Hobby bukan pilihan untuk menawarkan paket atau tools berbayar. Sebelum peluncuran komersial, ganti paket hosting ke paket yang mengizinkan komersial, atau pindahkan aplikasi ke host Node.js yang sesuai. Periksa ketentuan dan biaya provider saat memilih; tidak ada jaminan operasional bisnis gratis.
+Proyek memakai Next.js standar, bukan Vercel KV/Blob/Cron/Edge khusus. Build dengan `npm ci` dan `npm run build`, lalu jalankan `npm start` (PORT dapat ditentukan host). Saat pindah, atur dua environment Supabase di host baru, pindahkan DNS mybudget.biz.id, aktifkan HTTPS, serta ubah Supabase Site URL/allowed redirect URLs. Database/Auth tetap di Supabase sehingga tidak perlu memindahkan data hanya karena host aplikasi berubah. Storage privat dan konfigurasi merchant tetap perlu dibuat ketika slice terkait tersedia. Tidak ada deploy produksi atau konfigurasi deploy yang dibuat dalam sesi ini.
+
+## Prasyarat Phase 2: verifikasi Phase 1 live
+Phase 2 Sesi A tidak boleh dimulai sebelum isolasi dua akun Supabase sungguhan lolos. Unit test saja tidak membuktikan RLS. Hasil terbaru ada di `docs/phase1-rls-result.json`.
+1. Jalankan migration 001 pada Supabase proyek uji. Jangan menjalankan ulang migration pada database yang sudah berisi tabel tersebut.
+2. Daftarkan **dua akun khusus pengujian** lewat aplikasi. Konfirmasi email keduanya. Jangan onboarding dan jangan masukkan data keuangan pribadi. Skrip menolak akun yang sudah memiliki profile agar tidak mengubah profile lama.
+3. Buka `.env.rls-test` yang sudah dibuat dan diabaikan git. Isi `RLS_TEST_A_EMAIL`, `RLS_TEST_A_PASSWORD`, `RLS_TEST_B_EMAIL`, `RLS_TEST_B_PASSWORD`. Isi `RLS_TEST_ALLOW_FIXTURES=dedicated-test-accounts` untuk menyatakan keduanya akun uji khusus yang boleh diberi fixture sementara. Jangan mengirim kredensial ke chat. Dua variabel public Supabase tetap di `.env.local`; service_role/secret key tidak diizinkan.
+4. Jalankan `npm run verify:phase1-rls`. Skrip login sebagai A dan B, menguji baca/update/delete/insert lintas akun pada profiles/categories/transactions/budgets/goals dua arah, menguji FK kategori lintas akun serta validasi nominal/tanggal di database. Fixture dibuat hanya pada akun uji dan dihapus lewat pemiliknya di akhir; tidak menghapus akun Auth.
+5. Status `passed` dan cleanup `passed` diperlukan untuk melanjutkan. `blocked` berarti verifikasi belum selesai; `failed` berarti cek tidak lolos. Laporan hanya memuat label hasil, tanpa token, email, password, user_id, atau data pribadi. Kegagalan cleanup perlu ditangani sebelum uji diulang.
+Kasus tepi finance: `npm test`. Sesi A berikutnya: Reports → produk/entitlement → checkout manual. Sesi B terpisah: admin → QRIS/produk → CMS → verifikasi lanjutan. Tidak memulai Phase 3.
+
 ## Keterbatasan Phase 1
 Tidak ada Reports, checkout, admin, CMS, premium, recurring, digital tools atau AI. Tidak meminta QRIS/PIN. Tidak ada batas jumlah transaksi/goals di Phase 1; batas Free dan penegakan entitlement ditetapkan Phase 2. Dark mode ditunda. Nominal saldo beranimasi ringan dengan reduced-motion; transaksi optimistic dengan rollback saat gagal, form mempertahankan isi saat error. Jangan mengklaim pembayaran/admin/premium teruji sebelum implementasinya ada.
 

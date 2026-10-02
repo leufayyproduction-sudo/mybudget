@@ -10,3 +10,7 @@ test('budget lewat batas tidak dikurangkan lagi dari saldo',()=>assert.equal(saf
 test('bulan lain tidak memengaruhi ringkasan bulan, tetapi saldo aktual tetap',()=>assert.deepEqual(summary(ts,0,'2026-09'),{income:0,expense:0,balance:15000}));
 test('target tercapai tidak lagi mengambil alokasi rencana',()=>assert.equal(safeToSpend(ts,[],[{id:'g',name:'G',target:100,saved:100,monthly:10000}],10000,'2026-10'),25000));
 test('rata-rata lintas tahun',()=>assert.equal(averageIncome([{...ts[0],date:'2025-12-01'}],'2026-02'),20000/3));
+test('data kosong menghasilkan nol, tanpa NaN',()=>{assert.deepEqual(summary([],0,'2026-10'),{income:0,expense:0,balance:0});assert.equal(averageIncome([],'2026-10'),0);assert.equal(safeToSpend([],[],[],0,'2026-10'),0);});
+test('aman dibelanjakan negatif tetap ditampilkan',()=>assert.equal(safeToSpend([],[],[{id:'g',name:'G',target:20000,saved:0,monthly:20000}],10000,'2026-10'),-10000));
+test('proyeksi membulatkan jumlah bulan ke atas',()=>assert.equal(monthsToGoal({id:'g',name:'G',target:20000,saved:1000,monthly:6000}),4));
+test('patokan tidak memasukkan pemasukan bulan berjalan',()=>assert.equal(averageIncome(ts,'2026-10'),0));
