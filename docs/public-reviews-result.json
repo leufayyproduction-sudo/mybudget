@@ -1,6 +1,22 @@
 {
-  "checked_at": "2026-10-02T15:41:58.798Z",
-  "status": "blocked",
-  "checks": [],
-  "reason": "RPC baru belum dapat diakses. Jalankan migration 003 lalu ulangi."
+  "checked_at": "2026-10-02T15:49:58.930Z",
+  "status": "passed",
+  "checks": [
+    {
+      "label": "RPC ulasan hanya mengeluarkan kolom publik",
+      "passed": true
+    },
+    {
+      "label": "reviews: akses langsung anonim ditolak",
+      "passed": true
+    },
+    {
+      "label": "public_reviews: akses langsung anonim ditolak",
+      "passed": true
+    },
+    {
+      "label": "Ringkasan rating dapat dibaca publik",
+      "passed": true
+    }
+  ]
 }

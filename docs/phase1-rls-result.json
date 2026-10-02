@@ -1,6 +1,6 @@
 {
-  "checked_at": "2026-10-02T15:41:54.163Z",
-  "status": "blocked",
+  "checked_at": "2026-10-02T16:02:31.712Z",
+  "status": "passed",
   "checks": [
     {
       "label": "Supabase Auth sungguhan dapat dijangkau dengan public key",
@@ -25,8 +25,291 @@
     {
       "label": "goals: akses anonim dibatasi",
       "passed": true
+    },
+    {
+      "label": "A dan B adalah dua pengguna berbeda",
+      "passed": true
+    },
+    {
+      "label": "profiles: pemilik dapat membuat dan membaca fixture",
+      "passed": true
+    },
+    {
+      "label": "categories: pemilik dapat membuat dan membaca fixture",
+      "passed": true
+    },
+    {
+      "label": "transactions: pemilik dapat membuat dan membaca fixture",
+      "passed": true
+    },
+    {
+      "label": "budgets: pemilik dapat membuat dan membaca fixture",
+      "passed": true
+    },
+    {
+      "label": "goals: pemilik dapat membuat dan membaca fixture",
+      "passed": true
+    },
+    {
+      "label": "profiles: pemilik dapat membuat dan membaca fixture",
+      "passed": true
+    },
+    {
+      "label": "categories: pemilik dapat membuat dan membaca fixture",
+      "passed": true
+    },
+    {
+      "label": "transactions: pemilik dapat membuat dan membaca fixture",
+      "passed": true
+    },
+    {
+      "label": "budgets: pemilik dapat membuat dan membaca fixture",
+      "passed": true
+    },
+    {
+      "label": "goals: pemilik dapat membuat dan membaca fixture",
+      "passed": true
+    },
+    {
+      "label": "profiles: akun lain tidak dapat membaca",
+      "passed": true
+    },
+    {
+      "label": "profiles: akun lain tidak dapat mengubah",
+      "passed": true
+    },
+    {
+      "label": "profiles: akun lain tidak dapat menghapus",
+      "passed": true
+    },
+    {
+      "label": "profiles: fixture tetap utuh setelah percobaan lintas akun",
+      "passed": true
+    },
+    {
+      "label": "profiles: insert dengan user_id akun lain ditolak oleh RLS",
+      "passed": true
+    },
+    {
+      "label": "categories: akun lain tidak dapat membaca",
+      "passed": true
+    },
+    {
+      "label": "categories: akun lain tidak dapat mengubah",
+      "passed": true
+    },
+    {
+      "label": "categories: akun lain tidak dapat menghapus",
+      "passed": true
+    },
+    {
+      "label": "categories: fixture tetap utuh setelah percobaan lintas akun",
+      "passed": true
+    },
+    {
+      "label": "categories: insert dengan user_id akun lain ditolak oleh RLS",
+      "passed": true
+    },
+    {
+      "label": "transactions: akun lain tidak dapat membaca",
+      "passed": true
+    },
+    {
+      "label": "transactions: akun lain tidak dapat mengubah",
+      "passed": true
+    },
+    {
+      "label": "transactions: akun lain tidak dapat menghapus",
+      "passed": true
+    },
+    {
+      "label": "transactions: fixture tetap utuh setelah percobaan lintas akun",
+      "passed": true
+    },
+    {
+      "label": "transactions: insert dengan user_id akun lain ditolak oleh RLS",
+      "passed": true
+    },
+    {
+      "label": "budgets: akun lain tidak dapat membaca",
+      "passed": true
+    },
+    {
+      "label": "budgets: akun lain tidak dapat mengubah",
+      "passed": true
+    },
+    {
+      "label": "budgets: akun lain tidak dapat menghapus",
+      "passed": true
+    },
+    {
+      "label": "budgets: fixture tetap utuh setelah percobaan lintas akun",
+      "passed": true
+    },
+    {
+      "label": "budgets: insert dengan user_id akun lain ditolak oleh RLS",
+      "passed": true
+    },
+    {
+      "label": "goals: akun lain tidak dapat membaca",
+      "passed": true
+    },
+    {
+      "label": "goals: akun lain tidak dapat mengubah",
+      "passed": true
+    },
+    {
+      "label": "goals: akun lain tidak dapat menghapus",
+      "passed": true
+    },
+    {
+      "label": "goals: fixture tetap utuh setelah percobaan lintas akun",
+      "passed": true
+    },
+    {
+      "label": "goals: insert dengan user_id akun lain ditolak oleh RLS",
+      "passed": true
+    },
+    {
+      "label": "transactions: kategori milik akun lain ditolak composite FK",
+      "passed": true
+    },
+    {
+      "label": "budgets: kategori milik akun lain ditolak composite FK",
+      "passed": true
+    },
+    {
+      "label": "profiles: akun lain tidak dapat membaca",
+      "passed": true
+    },
+    {
+      "label": "profiles: akun lain tidak dapat mengubah",
+      "passed": true
+    },
+    {
+      "label": "profiles: akun lain tidak dapat menghapus",
+      "passed": true
+    },
+    {
+      "label": "profiles: fixture tetap utuh setelah percobaan lintas akun",
+      "passed": true
+    },
+    {
+      "label": "profiles: insert dengan user_id akun lain ditolak oleh RLS",
+      "passed": true
+    },
+    {
+      "label": "categories: akun lain tidak dapat membaca",
+      "passed": true
+    },
+    {
+      "label": "categories: akun lain tidak dapat mengubah",
+      "passed": true
+    },
+    {
+      "label": "categories: akun lain tidak dapat menghapus",
+      "passed": true
+    },
+    {
+      "label": "categories: fixture tetap utuh setelah percobaan lintas akun",
+      "passed": true
+    },
+    {
+      "label": "categories: insert dengan user_id akun lain ditolak oleh RLS",
+      "passed": true
+    },
+    {
+      "label": "transactions: akun lain tidak dapat membaca",
+      "passed": true
+    },
+    {
+      "label": "transactions: akun lain tidak dapat mengubah",
+      "passed": true
+    },
+    {
+      "label": "transactions: akun lain tidak dapat menghapus",
+      "passed": true
+    },
+    {
+      "label": "transactions: fixture tetap utuh setelah percobaan lintas akun",
+      "passed": true
+    },
+    {
+      "label": "transactions: insert dengan user_id akun lain ditolak oleh RLS",
+      "passed": true
+    },
+    {
+      "label": "budgets: akun lain tidak dapat membaca",
+      "passed": true
+    },
+    {
+      "label": "budgets: akun lain tidak dapat mengubah",
+      "passed": true
+    },
+    {
+      "label": "budgets: akun lain tidak dapat menghapus",
+      "passed": true
+    },
+    {
+      "label": "budgets: fixture tetap utuh setelah percobaan lintas akun",
+      "passed": true
+    },
+    {
+      "label": "budgets: insert dengan user_id akun lain ditolak oleh RLS",
+      "passed": true
+    },
+    {
+      "label": "goals: akun lain tidak dapat membaca",
+      "passed": true
+    },
+    {
+      "label": "goals: akun lain tidak dapat mengubah",
+      "passed": true
+    },
+    {
+      "label": "goals: akun lain tidak dapat menghapus",
+      "passed": true
+    },
+    {
+      "label": "goals: fixture tetap utuh setelah percobaan lintas akun",
+      "passed": true
+    },
+    {
+      "label": "goals: insert dengan user_id akun lain ditolak oleh RLS",
+      "passed": true
+    },
+    {
+      "label": "transactions: kategori milik akun lain ditolak composite FK",
+      "passed": true
+    },
+    {
+      "label": "budgets: kategori milik akun lain ditolak composite FK",
+      "passed": true
+    },
+    {
+      "label": "Validasi database menolak amount tidak valid",
+      "passed": true
+    },
+    {
+      "label": "Validasi database menolak amount tidak valid",
+      "passed": true
+    },
+    {
+      "label": "Validasi database menolak amount tidak valid",
+      "passed": true
+    },
+    {
+      "label": "Validasi database menolak amount tidak valid",
+      "passed": true
+    },
+    {
+      "label": "Validasi database menolak date tidak valid",
+      "passed": true
+    },
+    {
+      "label": "Validasi database menolak date tidak valid",
+      "passed": true
     }
   ],
-  "cleanup": "not_needed",
-  "reason": "Isi variabel lokal: RLS_TEST_A_EMAIL, RLS_TEST_A_PASSWORD, RLS_TEST_B_EMAIL, RLS_TEST_B_PASSWORD."
+  "cleanup": "passed"
 }

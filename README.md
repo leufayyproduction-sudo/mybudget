@@ -52,6 +52,12 @@ Tidak ada Reports, checkout, admin, CMS, premium, recurring, digital tools atau 
 
 Lihat PROGRESS.md untuk hasil verifikasi dan langkah berikutnya. Logo resmi terpusat di components/wordmark.tsx.
 
+## Reports sederhana (Phase 2 Sesi A)
+Menu **Laporan** memakai transaksi aktual akun: grafik enam bulan pemasukan (+) dan pengeluaran (−), tabel angka, kategori pengeluaran terbesar, serta perubahan terhadap bulan sebelumnya. Pengeluaran memakai pola garis agar seri tidak hanya dibedakan oleh warna. Saldo awal, perkiraan onboarding, dan alokasi target tidak masuk arus kas laporan.
+Pembanding nol ditampilkan sebagai `Baru` atau `Tidak ada pembanding`; penurunan ke nol dari nominal positif tetap −100%. Bulan berjalan belum selesai. Perhitungan ada di `lib/finance/reports.ts`, diuji dengan `npm test`. Tidak membutuhkan migration tambahan; pembacaan transaksi tetap lewat RLS Phase 1. Laporan lanjutan belum tersedia.
+
+Build dapat memakai folder terpisah agar tidak bentrok dengan dev: di PowerShell jalankan `$env:MYBUDGET_BUILD_DIR='.next-verify'; npm run build`. Jalankan `Remove-Item Env:MYBUDGET_BUILD_DIR` sebelum kembali memakai perintah run standar. Folder verifikasi diabaikan git; tidak memakai fitur khusus hosting.
+
 ## Logo dan ulasan pengguna
 
 ### Perbaikan view public_reviews

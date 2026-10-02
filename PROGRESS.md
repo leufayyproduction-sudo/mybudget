@@ -1,8 +1,8 @@
 # Progress My Budget
 
 ## Sesi aktif — prasyarat Phase 2 Sesi A
-- [doing] Verifikasi Phase 1 dengan Supabase sungguhan: BLOCKED sebelum RLS dua akun
-- [todo] Sesi A: Reports → produk/entitlement → checkout manual (belum mulai)
+- [done] Verifikasi Phase 1 Supabase sungguhan: passed, cleanup passed (2026-10-02); laporan lokal diperiksa.
+- [doing] Sesi A: Reports → produk/entitlement → checkout manual
 - [todo] Sesi B: admin → pengaturan produk/QRIS → CMS → verifikasi (belum mulai)
 - Phase 3 tidak dimulai. Tidak ada pembayaran nyata atau deployment.
 
@@ -13,10 +13,9 @@
 - Typecheck dan production build lolos. Tidak ada perubahan UI pada sesi prasyarat ini.
 
 ### Belum bisa diuji
-- Pemeriksaan terbaru: kelima tabel Phase 1 tersedia dan menolak akses anonim. Isolasi dua akun belum diuji karena kredensial akun uji belum diisi; tidak ada mutasi, cleanup not_needed.
-- Pengguna menyatakan belum ada dua akun uji. RLS baca/update/delete/insert dua arah, composite FK, dan validasi DB belum dijalankan.
-- Semua fitur dan verifikasi Phase 2 belum dimulai. QRIS merchant, pembayaran sungguhan dan hosting produksi belum dikonfigurasi.
-- Hasil aman tanpa rahasia: docs/phase1-rls-result.json (status blocked, cleanup not_needed).
+- RLS live dua akun selesai: baca/update/delete/insert lintas pemilik ditolak dua arah; composite FK dan nominal/tanggal invalid ditolak; fixture dibersihkan.
+- Reports mulai diimplementasikan; produk/entitlement dan checkout belum dimulai. QRIS merchant, pembayaran sungguhan dan hosting produksi belum dikonfigurasi.
+- Hasil aman tanpa rahasia: docs/phase1-rls-result.json (status passed, cleanup passed).
 
 ### Keputusan yang diambil
 - Patuhi gate pengguna: jangan membangun Phase 2 sebelum RLS live dua akun lolos.
@@ -25,13 +24,22 @@
 - Batas Free, perpanjangan entitlement, dan kedaluwarsa pesanan belum diimplementasikan/diklaim; ditetapkan pada slice Sesi A setelah gate lolos.
 - Hosting komersial memakai paket/provider yang mengizinkan komersial, tetap portabel dengan Next.js standar.
 
-Langkah berikutnya: jalankan 003_secure_public_reviews.sql di Supabase SQL Editor, lalu node scripts/verify-public-reviews.mjs. Buat dua akun uji tanpa onboarding, isi .env.rls-test lokal dan RLS_TEST_ALLOW_FIXTURES=dedicated-test-accounts. Jalankan npm run verify:phase1-rls; hanya lanjut Sesi A jika status passed dan cleanup passed.
+Langkah berikutnya: lanjut Sesi A setelah gate RLS passed; selesaikan Reports, lalu produk/entitlement dan checkout manual. Migration 003 ulasan tetap perlu dikonfirmasi dengan node scripts/verify-public-reviews.mjs.
+
+### Sesi A — Reports
+- [done] Perhitungan murni lib/finance/reports.ts: enam bulan, kategori pengeluaran, perbandingan bulan; nol memakai Baru/Tidak ada pembanding.
+- [done] UI Laporan terhubung ke data milik pengguna yang dimuat melalui RLS; data demo tetap lokal dan berlabel.
+- [done] Unit test 16/16 dan typecheck lolos.
+- [done] Production build termasuk TypeScript/lint bawaan Next lolos di .next-verify. Build awal pada .next gagal invariant /_not-found; folder verifikasi terpisah mengatasi benturan artefak dev/build.
+- [todo] Uji visual 375/768/1280: browser preview gagal merespons CDP (tiga timeout). Tidak diklaim teruji; tabel angka tersedia sebagai alternatif grafik dan layout CSS mobile disiapkan.
+- Keputusan: Reports sederhana memakai query transactions yang sudah teruji RLS; tidak perlu migration baru karena tidak menyimpan data turunan.
+- Titik lanjut stabil: Reports sudah build lolos. Sesi A belum selesai; jangan menganggap paket/checkout sudah tersedia. Langkah berikutnya: uji visual Reports saat browser tersedia, lalu slice 2.2 products/entitlements + batas Free/CSV server, baru 2.3 checkout manual. Phase 3 tetap todo.
 
 ### Perbaikan akses ulasan publik
 - [done] Source membaca RPC dengan kolom publik tetap; migration 003 membuat view security_invoker dan mencabut akses langsung anon/authenticated.
 - [done] Skrip cek akses publik tanpa mencetak key atau isi ulasan.
 - [done] Production build termasuk pemeriksaan TypeScript/lint bawaan Next lolos; sintaks skrip valid. .env.local dan .env.rls-test tetap diabaikan git.
-- [todo] Terapkan migration 003 di Supabase: cek live saat ini blocked karena RPC baru belum tersedia.
+- [done] Laporan docs/public-reviews-result.json terbaru passed: RPC publik tersedia, akses anonim langsung reviews/public_reviews ditolak. Laporan diperiksa pada sesi ini.
 - [todo] Uji kepemilikan ulasan dengan dua akun. Label UNRESTRICTED pada view bukan hasil pengujian RLS tabel.
 
 ## Riwayat pekerjaan sebelumnya
