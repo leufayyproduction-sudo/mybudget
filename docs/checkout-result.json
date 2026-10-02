@@ -1,9 +1,69 @@
 {
-  "status": "blocked",
-  "checked_at": "2026-10-02T22:38:34.012Z",
+  "status": "passed",
+  "checked_at": "2026-10-02T22:45:29.840Z",
   "checks": [
     {
       "label": "Dua akun berbeda",
+      "passed": true
+    },
+    {
+      "label": "Akun uji belum memiliki pesanan (tidak membuat pesanan nyata)",
+      "passed": true
+    },
+    {
+      "label": "orders: lintas pemilik tidak terbaca",
+      "passed": true
+    },
+    {
+      "label": "payment_confirmations: lintas pemilik tidak terbaca",
+      "passed": true
+    },
+    {
+      "label": "entitlements: lintas pemilik tidak terbaca",
+      "passed": true
+    },
+    {
+      "label": "Status pesanan tidak dapat diubah pengguna",
+      "passed": true
+    },
+    {
+      "label": "Tidak dapat menjadi admin sendiri",
+      "passed": true
+    },
+    {
+      "label": "Katalog aktif terbaca",
+      "passed": true
+    },
+    {
+      "label": "Akun uji belum memiliki pesanan (tidak membuat pesanan nyata)",
+      "passed": true
+    },
+    {
+      "label": "orders: lintas pemilik tidak terbaca",
+      "passed": true
+    },
+    {
+      "label": "payment_confirmations: lintas pemilik tidak terbaca",
+      "passed": true
+    },
+    {
+      "label": "entitlements: lintas pemilik tidak terbaca",
+      "passed": true
+    },
+    {
+      "label": "Status pesanan tidak dapat diubah pengguna",
+      "passed": true
+    },
+    {
+      "label": "Tidak dapat menjadi admin sendiri",
+      "passed": true
+    },
+    {
+      "label": "Katalog aktif terbaca",
+      "passed": true
+    },
+    {
+      "label": "Pesanan menolak anonim",
       "passed": true
     }
   ],

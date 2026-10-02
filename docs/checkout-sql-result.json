@@ -1,0 +1,9 @@
+{
+  "status": "passed_reported_by_user",
+  "source": "User supplied final Supabase SQL Editor result in this conversation",
+  "result": "PASS: checkout assertions; no payment; rollback removes metadata and orders",
+  "script": "supabase/tests/manual_checkout.sql",
+  "executed_by_agent": false,
+  "covers": ["server catalogue price snapshot", "order retry idempotency", "owner isolation", "protected status and entitlements", "private proof bucket and ownership", "confirmation does not activate Premium", "pending expiry and submitted retention"],
+  "not_verified": ["real merchant QRIS", "real payment", "admin approval and parallel approval", "CMS"]
+}
