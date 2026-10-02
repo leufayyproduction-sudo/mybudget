@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-10-02T16:43:22.765Z",
+  "status": "blocked",
+  "checks": [
+    {
+      "label": "Dua pengguna berbeda",
+      "passed": true
+    }
+  ],
+  "premium_sql_test": "pending",
+  "mutation": "none"
+}

@@ -48,13 +48,33 @@ Phase 2 Sesi A tidak boleh dimulai sebelum isolasi dua akun Supabase sungguhan l
 Kasus tepi finance: `npm test`. Sesi A berikutnya: Reports → produk/entitlement → checkout manual. Sesi B terpisah: admin → QRIS/produk → CMS → verifikasi lanjutan. Tidak memulai Phase 3.
 
 ## Keterbatasan Phase 1
-Tidak ada Reports, checkout, admin, CMS, premium, recurring, digital tools atau AI. Tidak meminta QRIS/PIN. Tidak ada batas jumlah transaksi/goals di Phase 1; batas Free dan penegakan entitlement ditetapkan Phase 2. Dark mode ditunda. Nominal saldo beranimasi ringan dengan reduced-motion; transaksi optimistic dengan rollback saat gagal, form mempertahankan isi saat error. Jangan mengklaim pembayaran/admin/premium teruji sebelum implementasinya ada.
+Checkout, admin, CMS, recurring, digital tools dan AI belum tersedia. Paket/entitlement dan Reports memerlukan migration 004 serta verifikasi live. Tidak meminta QRIS/PIN. Dark mode ditunda. Nominal saldo beranimasi ringan dengan reduced-motion; transaksi optimistic dengan rollback saat gagal, form mempertahankan isi saat error. Jangan mengklaim pembayaran/admin sudah tersedia.
 
 Lihat PROGRESS.md untuk hasil verifikasi dan langkah berikutnya. Logo resmi terpusat di components/wordmark.tsx.
 
 ## Reports sederhana (Phase 2 Sesi A)
 Menu **Laporan** memakai transaksi aktual akun: grafik enam bulan pemasukan (+) dan pengeluaran (−), tabel angka, kategori pengeluaran terbesar, serta perubahan terhadap bulan sebelumnya. Pengeluaran memakai pola garis agar seri tidak hanya dibedakan oleh warna. Saldo awal, perkiraan onboarding, dan alokasi target tidak masuk arus kas laporan.
-Pembanding nol ditampilkan sebagai `Baru` atau `Tidak ada pembanding`; penurunan ke nol dari nominal positif tetap −100%. Bulan berjalan belum selesai. Perhitungan ada di `lib/finance/reports.ts`, diuji dengan `npm test`. Tidak membutuhkan migration tambahan; pembacaan transaksi tetap lewat RLS Phase 1. Laporan lanjutan belum tersedia.
+Pembanding nol ditampilkan sebagai `Baru` atau `Tidak ada pembanding`; penurunan ke nol dari nominal positif tetap −100%. Bulan berjalan belum selesai. Perhitungan ada di `lib/finance/reports.ts`, diuji dengan `npm test`. Sesuai instruksi terbaru, seluruh halaman Laporan memerlukan Premium aktif: `reports_access` diperiksa database di RPC `get_report_transactions(month)` sebelum query. RPC tidak menerima user_id dan SECURITY INVOKER tetap memakai RLS Phase 1. Free melihat state terkunci dan CTA Paket tanpa data laporan. Dashboard Free hanya menampilkan arus kas bulan ini; grafik enam bulan dipindahkan seluruhnya ke Laporan Premium. Data transaksi pribadi tetap dapat dibaca pemilik untuk CRUD. Laporan lanjutan belum tersedia.
+
+## Paket & entitlement — tanpa checkout
+Urutan SQL: 001 → 002 → 003 → **004_plans_entitlements.sql**. Jangan mengulang migration yang sudah terpasang. Migration 004 menambah `plans`, `subscriptions`, RLS dan trigger kuota; semua akun lama dan registrasi baru mendapat Free. Tidak membaca role/plan dari user_metadata. Pengguna hanya SELECT langganan sendiri, tidak dapat INSERT/UPDATE/DELETE langganan atau konfigurasi paket.
+
+Satu sumber kuota adalah row `plans`; satu sumber hak akses adalah `get_entitlement()` (hanya auth.uid(), tanpa argumen pemilik). Plus/Pro `active` dengan `expires_at > now()` mendapat Premium. Tidak punya langganan, cancelled, expired, atau waktu tepat mencapai expires_at memakai Free otomatis tanpa cron. Row langganan boleh tetap berstatus active di penyimpanan setelah waktu berakhir; hak efektif sudah Free. Aktivasi saat ini hanya oleh pemilik database lewat SQL tepercaya; tidak ada UI/RPC aktivasi sendiri, layanan pembayaran atau checkout.
+
+| Batas Free | Aturan |
+| --- | --- |
+| 50 transaksi | Per bulan tanggal transaksi, bukan waktu input |
+| 8 kategori kustom | Total row categories; kategori bawaan tidak dihitung |
+| 1 goal aktif | saved < target; target tercapai tidak dihitung |
+| 5 kategori budget | Per bulan budget |
+
+Plus/Pro tidak memiliki empat batas itu dan mendapat `reports_access=true`; Free false. Trigger database memeriksa kuota pada INSERT/UPDATE/upsert, dengan penguncian per pengguna untuk request bersamaan. Data lama di atas batas tetap bisa dibaca, dihapus, dan diedit dalam bucket kuota yang sama; menambah/memindahkan ke bulan penuh atau membuka lagi goal tercapai ditolak. Error menampilkan batas dan CTA Paket. UI kategori kustom belum ditambahkan di slice ini; tabel/API categories sudah dibatasi.
+
+Verifikasi:
+1. Jalankan migration 004 via Supabase SQL Editor → New query → Run.
+2. `npm run verify:entitlements` menggunakan dua akun di .env.rls-test, public key saja. Skrip menguji penolakan Free/RLS/langganan dan menghasilkan `.rls-entitlements-test.sql` lokal yang diabaikan git (berisi UUID akun uji, tanpa password/key).
+3. Jalankan seluruh `.rls-entitlements-test.sql` melalui SQL Editor sebagai pemilik database. Tes memakai `SET LOCAL ROLE authenticated` dan JWT sub A/B, menguji paket aktif/kedaluwarsa/tanpa paket, kuota tepat/lebih batas, edit/upsert legacy serta isolasi laporan. Harus muncul `PASS: all assertions` dan diakhiri `ROLLBACK`; tidak meninggalkan data/aktivasi. Jika gagal dan editor tidak menutup transaksi, jalankan `ROLLBACK;` sebelum mengulang. Jangan hapus rollback atau memakai akun pribadi.
+4. `npm run verify:phase1-rls` untuk regresi isolasi yang sudah lolos. `npm run lint`, `npm test`, `npm run typecheck`, `npm run build` untuk cek lokal.
 
 Build dapat memakai folder terpisah agar tidak bentrok dengan dev: di PowerShell jalankan `$env:MYBUDGET_BUILD_DIR='.next-verify'; npm run build`. Jalankan `Remove-Item Env:MYBUDGET_BUILD_DIR` sebelum kembali memakai perintah run standar. Folder verifikasi diabaikan git; tidak memakai fitur khusus hosting.
 
