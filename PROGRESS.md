@@ -5,13 +5,16 @@
 - [done] Transactions CRUD dan filter: nominal/tanggal/kategori, modal Radix
 - [done] Budget dan goals CRUD: per bulan, warning, proyeksi nol/tercapai
 - [done] Edit profil dan permintaan perubahan email/password
+- [done] .env.local dibuat tanpa overwrite, gitignored; /setup cek Auth/database tanpa menampilkan key
 - [doing] Migration, setup, verifikasi (integrasi live memerlukan Supabase)
 - [todo] Phase 2 (belum dimulai)
 - [todo] Phase 3 (belum dimulai)
 
 Keputusan: repo kosong. Demo lokal eksplisit saat env Supabase belum tersedia.
 Masalah terbuka: akses Supabase, QRIS, logo, hosting belum tersedia.
-Keputusan: optimistic update tidak diterapkan ke Supabase agar kegagalan tersaji tanpa rollback rumit.
+Optimistic update transaksi dengan rollback saat server gagal; animasi nominal 350ms menghormati reduced motion.
 Kategori awal tetap, tanpa batas jumlah transaksi/goals Phase 1; batas Free ditetapkan di Phase 2.
 Vercel Hobby nonkomersial saja menurut dokumentasi; jangan deploy penawaran berbayar di Hobby.
-Langkah berikutnya: selesaikan install, typecheck/build/test, uji browser 375/768/1280 dan CRUD demo.
+Tema disesuaikan sesuai instruksi terbaru: putih + biru 50–900, hijau hanya pemasukan/sukses.
+Verifikasi: 4 unit test finance lolos; typecheck lolos; build awal lolos; npm audit 0 vulnerabilities setelah override PostCSS.
+Langkah berikutnya: build final lalu uji browser 375/768/1280 dan CRUD demo.
