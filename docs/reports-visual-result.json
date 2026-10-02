@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "surface": "localhost demo, using the same LockedReports component as Free; live Free denial verified separately",
+  "viewports": [
+    {"width":375,"height":812,"document_width":360,"horizontal_overflow":false,"locked":true,"chart":false,"table":false,"screenshot":"reports-locked-375.png"},
+    {"width":768,"height":1024,"document_width":768,"horizontal_overflow":false,"locked":true,"chart":false,"table":false,"screenshot":"reports-locked-768.png"},
+    {"width":1280,"height":900,"document_width":1280,"horizontal_overflow":false,"locked":true,"chart":false,"table":false,"screenshot":"reports-locked-1280.png"}
+  ],
+  "upgrade_navigation": "passed: CTA opens Paket; Free/Plus/Pro catalog loaded from Supabase",
+  "fixes": ["remove overlapping FAB on Reports/Paket", "month selector only in unlocked Premium reports", "specific page descriptions"],
+  "cleanup": "temporary demo profile reset; viewport override reset",
+  "not_tested": "active Premium report UI in browser; SQL coverage recorded separately"
+}

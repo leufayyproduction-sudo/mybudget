@@ -10,7 +10,7 @@ const monthLabel = (month: string) => new Date(`${month}-01T12:00:00`).toLocaleD
 export function LockedReports({ upgrade }: { upgrade: () => void }) {
  return <section className="panel report-locked"><div className="section-icon"><LockKeyhole size={24}/></div><span className="eyebrow">LAPORAN PREMIUM</span><h2>Kenali pola uangmu lebih jauh.</h2><p>Laporan tersedia untuk paket Plus atau Pro yang masih aktif. Transaksimu tetap tersimpan dan bisa kamu kelola.</p><ul><li>Arus kas pemasukan dan pengeluaran enam bulan</li><li>Kategori pengeluaran terbesar</li><li>Perbandingan dengan bulan sebelumnya</li></ul><button className="button primary" onClick={upgrade}>Upgrade ke Premium</button><small>Pengaktifan paket belum tersedia di sesi ini.</small></section>;
 }
-export default function Reports({ user, month, add, upgrade }: { user: string; month: string; add: () => void; upgrade: () => void }) {
+export default function Reports({ user, month, onMonthChange, add, upgrade }: { user: string; month: string; onMonthChange: (month:string) => void; add: () => void; upgrade: () => void }) {
  const [state, setState] = useState<'loading'|'locked'|'ready'|'error'>('loading');
  const [rows, setRows] = useState<Transaction[]>([]);
  const [expires, setExpires] = useState<number|null>(null);
@@ -45,7 +45,7 @@ export default function Reports({ user, month, add, upgrade }: { user: string; m
  if (state==='loading') return <section className="panel" role="status"><div className="skeleton review-skeleton"/>Memeriksa akses laporan…</section>;
  if (state==='locked') return <LockedReports upgrade={upgrade}/>;
  if (state==='error') return <section className="panel" role="alert"><h2>Laporan belum dapat dibuka.</h2><p className="muted">Periksa koneksi dan migration 004, lalu buka kembali menu Laporan.</p></section>;
- return <ReportContent transactions={rows} month={month} add={add}/>;
+ return <><label className="month-input report-month">Bulan laporan<input type="month" value={month} onChange={e=>e.target.value&&onMonthChange(e.target.value)}/></label><ReportContent transactions={rows} month={month} add={add}/></>;
 }
 function ReportContent({ transactions, month, add }: { transactions: Transaction[]; month: string; add: () => void }) {
  const r = report(transactions, month);
