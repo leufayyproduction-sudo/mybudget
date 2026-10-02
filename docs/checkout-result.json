@@ -1,0 +1,12 @@
+{
+  "status": "blocked",
+  "checked_at": "2026-10-02T22:38:34.012Z",
+  "checks": [
+    {
+      "label": "Dua akun berbeda",
+      "passed": true
+    }
+  ],
+  "sql_test": "pending",
+  "real_payments": "not_tested"
+}

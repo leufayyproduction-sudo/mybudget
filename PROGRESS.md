@@ -1,11 +1,23 @@
 # Progress My Budget
 
-## Sesi aktif — Phase 2 Sesi A, paket/entitlement saja
-- Scope terbaru: HANYA paket/entitlement + gating Reports. Checkout tidak disentuh.
+## Sesi aktif — Phase 2 Sesi A, checkout/pesanan
+- Pengguna mengizinkan Phase 2 keseluruhan; lanjut slice checkout manual dari fondasi paket/entitlement yang lolos. Berhenti di akhir Sesi A; Sesi B terpisah.
+- [done] Implementasi checkout/pesanan: katalog produk, snapshot server, status pending/submitted/expired, bukti privat, riwayat. Verifikasi database live masih pending migration 005.
+- QRIS resmi belum tersedia: jangan menerima pembayaran atau membuat pesanan yang tak bisa dibayar. Tidak deploy.
 - [done] Verifikasi Phase 1 Supabase sungguhan: passed, cleanup passed (2026-10-02); laporan lokal diperiksa.
 - [doing] Sesi A: Reports → produk/entitlement → checkout manual
 - [todo] Sesi B: admin → pengaturan produk/QRIS → CMS → verifikasi (belum mulai)
 - Phase 3 tidak dimulai. Tidak ada pembayaran nyata atau deployment.
+
+### Checkout — serah terima Sesi A
+- [done] Migration 005: products, orders, confirmations, entitlements, admin_users terproteksi, payment_settings, bucket bukti privat. RPC mengambil harga katalog, mengunci pesanan, dan konfirmasi tidak memberi paket.
+- [done] Checkout dan riwayat pembelian; jika QRIS resmi belum tersedia, pesanan ditolak. Simulasi /checkout/demo diberi label dan tidak menghubungi RPC pembayaran.
+- [done] Ekspor CSV server Plus/Pro: cek entitlement, query milik pengguna dengan RLS, pagination, perlindungan formula spreadsheet.
+- Sudah diuji: 21/21 unit test; lint dan TypeScript; API anonim orders/CSV ditolak 401; simulasi konfirmasi tidak mengaktifkan Premium. Layout checkout contoh 375/768/1280 tanpa overflow horizontal, screenshot docs/checkout-demo-*.png.
+- [done] Production build akhir lolos di .next-verify, termasuk lint/TypeScript dan semua route checkout/API. Environment lokal dan SQL akun uji terkonfirmasi gitignored.
+- Belum bisa diuji: migration 005 belum tersedia di Supabase (verify:checkout blocked); assertions SQL checkout, storage privat live, CSV Premium live, QRIS merchant asli dan pembayaran nyata. Admin persetujuan paralel/idempotent serta CMS adalah Sesi B, belum diimplementasikan.
+- Keputusan: pending kedaluwarsa 24 jam saat dibaca; submitted tidak kedaluwarsa otomatis. Snapshot harga tidak berubah bersama katalog; request UUID dan konfirmasi idempotent. Bukti JPEG/PNG/WebP maksimal 5 MB, signed URL 60 detik. Nominal unik default mati; Early Access belum aktif; tools belum dijual.
+- Langkah berikutnya: jalankan supabase/migrations/005_manual_checkout.sql di SQL Editor, npm run verify:checkout, lalu .rls-checkout-test.sql untuk assertions rollback. Kirim hasil PASS/error tanpa key. Setelah gate checkout lolos, lanjut Sesi B admin/QRIS/CMS; Phase 2 keseluruhan belum selesai.
 
 ### Slice paket & entitlement (instruksi terbaru)
 - [done] Migration 004: plans menjadi sumber batas; subscriptions per user, backfill Free + trigger akun baru; pengguna hanya boleh membaca langganan sendiri.

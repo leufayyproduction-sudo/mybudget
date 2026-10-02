@@ -10,7 +10,8 @@
     "test": "tsx --test lib/finance/*.test.ts tests/*.test.tsx",
     "verify:phase1-rls": "node scripts/verify-phase1-rls.mjs",
     "lint": "eslint app components lib scripts next.config.ts",
-    "verify:entitlements": "node scripts/verify-entitlements.mjs"
+    "verify:entitlements": "node scripts/verify-entitlements.mjs",
+    "verify:checkout": "node scripts/verify-checkout.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",

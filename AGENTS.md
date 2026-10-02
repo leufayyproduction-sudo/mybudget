@@ -16,6 +16,6 @@
 - Jangan lanjut Phase 2 tanpa instruksi pengguna.
 - Phase 2 diminta; jangan mulai fiturnya sebelum RLS dua akun live lolos.
 - RLS: node scripts/verify-phase1-rls.mjs; akun uji lokal .env.rls-test, tanpa service role.
-- Scope terbaru: paket/entitlement dan gating Reports saja; jangan sentuh checkout.
+- Scope terbaru: Phase 2 diminta keseluruhan; sesi ini Sesi A checkout/pesanan, Sesi B admin/QRIS/CMS terpisah.
 - plans adalah sumber kuota; get_entitlement() sumber hak akses; get_report_transactions(month) wajib untuk Reports.
 - npm run lint / npm run verify:entitlements; tes Premium/kuota rollback di supabase/tests/plans_entitlements.sql.

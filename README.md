@@ -1,6 +1,27 @@
-# My Budget — Phase 1
+# My Budget — Phase 1 dan Phase 2 bertahap
 
-Website personal finance Indonesia. Source Phase 1: landing, Auth, onboarding, dashboard, CRUD transaksi/budget/target, pengaturan profil. Phase 2/3 belum dibuat; tidak ada pembayaran atau aktivasi premium.
+Website personal finance Indonesia. Phase 1 tersedia; Phase 2 sedang dilengkapi: paket/entitlement, laporan, ekspor CSV dan checkout manual. Admin/pengaturan/CMS adalah Sesi B. Tidak ada pembayaran otomatis, deployment, atau Phase 3.
+
+## Checkout manual — Phase 2 Sesi A
+Urutan migration: 001 → 002 → 003 → 004 → **005_manual_checkout.sql**. Jangan mengulang migration yang sudah terpasang. Migration 005 menambah products, payment_settings, orders, payment_confirmations, entitlements dan fondasi admin_users/is_admin. RLS aktif; pengguna hanya membaca pesanan/konfirmasi/entitlement miliknya. Semua tulisan pesanan lewat RPC; harga/masa akses/merchant/QRIS adalah snapshot dari katalog database. Route `/api/orders` memverifikasi JWT Supabase dan membuang nominal/plan/user_id dari browser. Tidak memakai service-role key.
+
+- Harga produk Plus/Pro berasal dari products; plans tetap sumber kuota. Early Access default nonaktif, Pro 365 hari, promo/harga harus diatur admin nanti. Digital tools belum dijual.
+- `pending` berakhir setelah 24 jam. `list_my_orders` mengubah pending yang lewat batas menjadi expired. Submitted tidak otomatis kedaluwarsa.
+- Referensi wajib 3–120 karakter, catatan maksimal 1.000, bukti opsional. Konfirmasi hanya menghasilkan submitted, bukan paid/premium. Retry request UUID dan konfirmasi idempotent. Penolakan/persetujuan serta audit dibuat di Sesi B.
+- Tambahan nominal pencocokan default mati. Jika admin mengaktifkannya nanti, alokasi 1–999 rupiah tidak dipakai pesanan pending/submitted lain dengan merchant/total yang sama; total dan tambahan disimpan di snapshot.
+- Bucket `payment-proofs` **privat**, maksimal 5 MB, MIME JPEG/PNG/WebP. Path user_id/order_id/UUID.ext; upload hanya pemilik pesanan pending. RPC memeriksa path, keberadaan objek dan metadata ukuran/MIME. Bukti ditampilkan pemilik melalui signed URL 60 detik. Tidak ada URL publik permanen. Upload yang berhasil tetapi konfirmasi gagal dapat meninggalkan objek privat; pembersihan objek orphan perlu ditambahkan di admin/operasional nanti.
+- Bucket `merchant-qris` publik hanya untuk gambar resmi yang memang ditampilkan ke pembeli; upload dibatasi admin. Jangan unggah bukti pengguna ke bucket ini. Kode tidak membuat, mengubah, atau mengedit payload/gambar QRIS.
+- **QRIS belum ada: pembayaran belum tersedia dan create_order ditolak**. Jangan mengaktifkan payment_settings atau menerima pembayaran sebelum Sesi B/admin review dan QRIS resmi diverifikasi. Konfigurasi produk/merchant sementara hanya SQL pemilik proyek; UI pengaturan diselesaikan Sesi B.
+- Admin pertama (saat Sesi B siap): cari UUID akun di Authentication → Users, lalu pemilik database menjalankan `insert into public.admin_users(user_id) values ('UUID-AKUN-ADMIN') on conflict do nothing;`. Role tidak berasal dari metadata pengguna; tidak ada UI elevasi sendiri. Admin belum memiliki halaman atau RPC persetujuan di sesi ini.
+
+### Menguji tanpa pembayaran
+`/checkout/demo` menampilkan contoh alur, tanpa QRIS, tanpa upload/pesanan/pembayaran/aktivasi. Form bisa disimulasikan, tetapi tidak mengubah Supabase. Label contoh selalu terlihat.
+1. Terapkan migration 005 melalui SQL Editor → New query → Run.
+2. Jalankan `npm run verify:checkout` dengan dua akun disposable di .env.rls-test. Skrip tidak membuat pesanan nyata, memeriksa API/RLS dan menyiapkan `.rls-checkout-test.sql` yang diabaikan git.
+3. Jalankan seluruh `.rls-checkout-test.sql` di SQL Editor. Fixture QRIS/bukti hanya metadata sementara (tidak membuat gambar atau pembayaran). Tes memeriksa katalog/snapshot/retry, isolasi A/B, privatnya bucket, status, referensi, dan konfirmasi tidak mengaktifkan paket. Cari hasil PASS; seluruh transaksi berakhir **ROLLBACK**. Jika editor meninggalkan transaksi gagal, jalankan ROLLBACK sebelum ulang.
+4. Regresi: `npm run verify:entitlements`, `npm run verify:phase1-rls`; lalu lint/test/typecheck/build. Persetujuan paralel/idempotent dan CMS diuji di Sesi B, belum diklaim tersedia.
+
+Ekspor CSV Plus/Pro ada di `/api/exports/transactions`: hak akses dicek server lewat get_entitlement, SELECT memakai RLS pemilik, pagination 1.000 per query, output aman terhadap formula spreadsheet. Hindari mengedit transaksi bersamaan dengan ekspor besar; query per halaman bukan snapshot satu transaksi database.
 
 ## Jalankan
 Node.js 22+, `npm ci`, lalu `npm run dev`. Buka http://localhost:3000. Tanpa environment Supabase, klik **Coba demo interaktif**. Data demo tersimpan di localStorage browser ini; bukan akun atau penyimpanan aman untuk data sensitif. Landing memakai data contoh berlabel dan tidak memasukkannya ke akun.
