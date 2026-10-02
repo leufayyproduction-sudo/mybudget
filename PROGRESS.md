@@ -15,14 +15,16 @@
 - [done] State terkunci + CTA ke Paket, halaman katalog/status; recheck akses pada fokus/60 detik, data laporan dibuang saat expiry.
 - [done] Test SQL rollback untuk user tanpa paket, Free tepat/lebih batas, Plus/Pro aktif, kedaluwarsa, cancelled, edit/upsert data legacy, report A/B, write langganan/config ditolak.
 - [done] Lint dan TypeScript lolos; 17/17 tests (16 finance + state terkunci tanpa data) lolos. Production build termasuk pemeriksaan lint/TypeScript lolos.
-- [todo] Migration 004 live + tes API/SQL: endpoint belum tersedia pada pemeriksaan awal. Pengguna diminta menerapkan SQL Editor; tidak menggunakan service_role.
+- [done] Migration 004 live terkonfirmasi melalui API. npm run verify:entitlements passed: Free RPC ditolak, langganan lintas pengguna tidak terbaca, insert/update langganan sendiri/lintas akun dan edit plans ditolak.
+- [done] Pengguna melaporkan hasil akhir SQL Editor: PASS: all assertions; rollback removes fixtures and temporary upgrades. Mencakup Premium aktif/kedaluwarsa, semua kuota, data legacy, dan laporan A/B. Bukti dicatat terpisah di docs/entitlements-sql-result.json sebagai user-reported, bukan eksekusi agen.
+- [done] Regresi live npm run verify:phase1-rls setelah migration 004: passed, cleanup passed. RLS dua akun, composite FK, validasi nominal/tanggal tetap lolos.
 - [todo] Visual 375/768/1280: preview browser timeout pada navigasi/fokus tab. Tidak diklaim lolos.
 - Sudah diuji: shape state terkunci tidak mengandung nominal/tabel/grafik, test finance tidak regresi, build berhasil, syntax skrip valid, environment dan SQL lokal akun uji gitignored. npm audit 0 setelah menambah alat lint development yang diperlukan.
-- Belum bisa diuji: tes Premium/expiry/kuota/RLS RPC baru di database sungguhan menunggu migration 004; npm run verify:entitlements dijalankan dua kali dan hasil blocked (RPC belum tersedia). SQL rollback lengkap tersedia, belum dijalankan di Supabase. RLS Phase 1 sebelumnya tetap tercatat passed; regresi setelah migration baru belum diuji.
+- Belum bisa diuji: visual state terkunci 375/768/1280 karena browser timeout. Laporan docs/entitlements-result.json hanya memuat pemeriksaan API otomatis; field premium_sql_test pending di sana berarti skrip API tidak menjalankan SQL owner. Hasil SQL yang dijalankan pengguna tersimpan terpisah di docs/entitlements-sql-result.json.
 - Keputusan: plans berisi free/plus/pro; langganan satu row/user, status active/cancelled/expired, expires_at wajib bagi Premium. Aktivasi hanya SQL pemilik sampai admin/pembelian dikerjakan nanti. Tidak ada checkout atau pembayaran.
 - Keputusan: batas diterapkan pada pertumbuhan kuota, bukan menghapus data. Edit/upsert dalam bucket lama tetap boleh setelah expiry, perpindahan bulan dan membuka lagi goal tercapai diperiksa ulang. Kategori bawaan tidak memakai kuota kategori kustom.
 - Keputusan: arus kas enam bulan di Dashboard diganti ringkasan bulan berjalan, agar fitur Laporan Premium tidak terbuka lewat UI lain. Tidak ada data laporan sebagian pada state terkunci. Browser belum dapat dipakai untuk pemeriksaan visual, meski preview localhost merespons HTTP 200.
-- Langkah berikutnya: terapkan migration 004, npm run verify:entitlements; jalankan .rls-entitlements-test.sql di SQL Editor dan pastikan hasil PASS + ROLLBACK. Ulangi npm run verify:phase1-rls untuk regresi isolasi.
+- Langkah berikutnya: selesaikan pemeriksaan visual state terkunci pada 375/768/1280 saat browser tersedia. Tidak memulai checkout atau Phase 3. Kode slice dan semua cek lokal sudah tersimpan pada 0cba094; hasil verifikasi database dicatat dalam commit dokumentasi berikutnya.
 
 ### Sudah diuji
 - `npm test`: 12/12 finance tests lolos, termasuk data kosong, Rp20.000, saldo/alokasi negatif, goal nol/tercapai, pembulatan, lintas tahun.

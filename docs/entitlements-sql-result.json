@@ -1,0 +1,8 @@
+{
+  "status": "passed_reported_by_user",
+  "source": "User supplied final Supabase SQL Editor result in this conversation",
+  "result": "PASS: all assertions; rollback removes fixtures and temporary upgrades",
+  "script": "supabase/tests/plans_entitlements.sql",
+  "executed_by_agent": false,
+  "covers": ["no subscription", "Free quotas at and over limit", "active Plus/Pro", "expired/cancelled subscription", "report ownership", "subscription write denial", "legacy edits and upserts"]
+}

@@ -1,9 +1,65 @@
 {
-  "checked_at": "2026-10-02T16:43:22.765Z",
-  "status": "blocked",
+  "checked_at": "2026-10-02T16:55:08.455Z",
+  "status": "passed",
   "checks": [
     {
       "label": "Dua pengguna berbeda",
+      "passed": true
+    },
+    {
+      "label": "Akun uji Free tidak mendapat reports_access",
+      "passed": true
+    },
+    {
+      "label": "Free ditolak oleh RPC laporan",
+      "passed": true
+    },
+    {
+      "label": "Langganan pengguna lain tidak terbaca",
+      "passed": true
+    },
+    {
+      "label": "Tidak dapat mengubah langganan sendiri/lintas pemilik",
+      "passed": true
+    },
+    {
+      "label": "Tidak dapat mengubah langganan sendiri/lintas pemilik",
+      "passed": true
+    },
+    {
+      "label": "Tidak dapat mengaktifkan premium sendiri",
+      "passed": true
+    },
+    {
+      "label": "Konfigurasi paket tidak dapat diubah pengguna",
+      "passed": true
+    },
+    {
+      "label": "Akun uji Free tidak mendapat reports_access",
+      "passed": true
+    },
+    {
+      "label": "Free ditolak oleh RPC laporan",
+      "passed": true
+    },
+    {
+      "label": "Langganan pengguna lain tidak terbaca",
+      "passed": true
+    },
+    {
+      "label": "Tidak dapat mengubah langganan sendiri/lintas pemilik",
+      "passed": true
+    },
+    {
+      "label": "Tidak dapat mengubah langganan sendiri/lintas pemilik",
+      "passed": true
+    },
+    {
+      "label": "Tidak dapat mengaktifkan premium sendiri",
+      "passed": true
+    },
+    {
+      "label": "Konfigurasi paket tidak dapat diubah pengguna",
       "passed": true
     }
   ],
