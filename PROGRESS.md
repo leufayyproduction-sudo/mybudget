@@ -11,7 +11,12 @@
 - [todo] Phase 3 (belum dimulai)
 
 Keputusan: repo kosong. Demo lokal eksplisit saat env Supabase belum tersedia.
-Masalah terbuka: akses Supabase, QRIS, logo, hosting belum tersedia.
+Masalah terbuka: akses Supabase, QRIS, hosting belum tersedia.
+Logo resmi sudah diberikan dan dipasang; navbar landing memakai blue-100.
+- [done] Logo terpusat dan icon tab dari file asli pengguna
+- [done] Ulasan pengguna: rating, filter, edit/hapus, persistence demo/Supabase; migration 002
+Verifikasi ulasan: typecheck dan build lolos; browser demo simpan/edit rating/filter dan persetujuan wajib lolos. Environment Supabase telah terisi oleh pengguna; tabel ulasan belum dapat diakses. Migration 002 dan uji live RLS ulasan masih perlu dijalankan.
+Browser ulasan 375/768/1280px: tidak ada overflow; persistence reload dan hapus demo teruji. Bukti visual docs/reviews-demo.jpg (data pengujian berlabel demo, telah dihapus dari browser).
 Optimistic update transaksi dengan rollback saat server gagal; animasi nominal 350ms menghormati reduced motion.
 Kategori awal tetap, tanpa batas jumlah transaksi/goals Phase 1; batas Free ditetapkan di Phase 2.
 Vercel Hobby nonkomersial saja menurut dokumentasi; jangan deploy penawaran berbayar di Hobby.

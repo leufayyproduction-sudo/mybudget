@@ -37,4 +37,10 @@ Vercel Hobby hanya untuk penggunaan personal nonkomersial: https://vercel.com/do
 ## Keterbatasan Phase 1
 Tidak ada Reports, checkout, admin, CMS, premium, recurring, digital tools atau AI. Tidak meminta QRIS/PIN. Tidak ada batas jumlah transaksi/goals di Phase 1; batas Free dan penegakan entitlement ditetapkan Phase 2. Dark mode ditunda. Nominal saldo beranimasi ringan dengan reduced-motion; transaksi optimistic dengan rollback saat gagal, form mempertahankan isi saat error. Jangan mengklaim pembayaran/admin/premium teruji sebelum implementasinya ada.
 
-Lihat PROGRESS.md untuk hasil verifikasi dan langkah berikutnya. Logo sementara terpusat di components/wordmark.tsx.
+Lihat PROGRESS.md untuk hasil verifikasi dan langkah berikutnya. Logo resmi terpusat di components/wordmark.tsx.
+
+## Logo dan ulasan pengguna
+Logo resmi dari pengguna ada di `public/brand/mybudget-logo.png`, dirender lewat Wordmark. `app/icon.png` memakai gambar asli yang sama untuk ikon tab, tanpa membuat ulang logo.
+Jalankan `supabase/migrations/002_reviews.sql` setelah migration 001 untuk mengaktifkan ulasan. Landing memiliki bagian Ulasan; halaman `/reviews` bisa dibuka dari footer dashboard. Pengguna login dapat menulis satu ulasan per akun dan memperbaruinya. Nama tampilan dan teks menjadi publik setelah persetujuan pada form; jangan masukkan informasi keuangan pribadi. Rating 1–5, teks 10–1.000 karakter, nama 2–60 karakter divalidasi browser dan database.
+RLS tabel reviews hanya memberi akses row milik sendiri. Public view sengaja memakai hak owner, memproyeksikan hanya nama tampilan, rating, teks, ID ulasan, dan tanggal; tidak mengeluarkan user_id/email/profil. RPC ringkasan hanya mengeluarkan agregat rating. Timestamp ditetapkan DB dan tidak dapat diset browser. Tidak ada label pembelian terverifikasi palsu. Daftar menampilkan 20 ulasan terbaru, rating ringkasan mencakup semuanya. Moderasi/rate limiting tambahan belum tersedia.
+Tanpa Supabase, satu ulasan demo bisa diisi, diperbarui, dan dihapus, disimpan lokal dengan label eksplisit; tidak dihitung sebagai testimoni pengguna sungguhan. `/reviews?demo=1` menyediakan uji lokal terpisah bahkan ketika environment Supabase sudah terisi. Mode ini tidak mengubah data atau hak akses server. Integrasi ulasan Supabase/RLS masih memerlukan migration 002 dan pengujian dua akun.
