@@ -1,12 +1,14 @@
 # Progress My Budget
 
-## Sesi aktif — Phase 2 Sesi A, checkout/pesanan
+## Sesi aktif — Phase 2 Sesi B, admin/pengaturan/CMS
 - Pengguna mengizinkan Phase 2 keseluruhan; lanjut slice checkout manual dari fondasi paket/entitlement yang lolos. Berhenti di akhir Sesi A; Sesi B terpisah.
 - [done] Implementasi checkout/pesanan: katalog produk, snapshot server, status pending/submitted/expired, bukti privat, riwayat. Migration 005 live dan verifikasi API passed; assertions SQL dilaporkan PASS oleh pengguna.
 - QRIS resmi belum tersedia: jangan menerima pembayaran atau membuat pesanan yang tak bisa dibayar. Tidak deploy.
 - [done] Verifikasi Phase 1 Supabase sungguhan: passed, cleanup passed (2026-10-02); laporan lokal diperiksa.
 - [done] Sesi A: Reports → produk/entitlement → checkout manual
-- [todo] Sesi B: admin → pengaturan produk/QRIS → CMS → verifikasi (belum mulai)
+- [doing] Sesi B: admin → pengaturan produk/QRIS → CMS → verifikasi (pengguna meminta mulai)
+- [done] Implementasi slice admin: migration 006, halaman/admin API terproteksi, audit, review atomik/idempotent, renewal serial. 23 tests, TypeScript dan production build termasuk lint lolos.
+- Belum bisa diuji slice admin: migration 006 live, assertions SQL dan persetujuan paralel. npm run verify:admin menyiapkan .rls-admin-test.sql; API masih blocked sebelum migration diterapkan. Admin nyata/QRIS merchant belum dikonfigurasi.
 - Phase 3 tidak dimulai. Tidak ada pembayaran nyata atau deployment.
 
 ### Checkout — serah terima Sesi A

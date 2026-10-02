@@ -1,0 +1,4 @@
+import {adminClient,adminError} from '@/lib/admin-server';
+import {privateJson} from '@/lib/server-api';
+import {z} from 'zod';
+export async function GET(request:Request){try{const c=await adminClient(request);const id=z.string().uuid().safeParse(new URL(request.url).searchParams.get('order'));if(!id.success)return privateJson({error:'ID pesanan tidak valid.'},400);const proof=await c.from('payment_confirmations').select('proof_path').eq('order_id',id.data).maybeSingle();if(proof.error||!proof.data?.proof_path)return privateJson({error:'Bukti tidak tersedia.'},404);const r=await c.storage.from('payment-proofs').createSignedUrl(proof.data.proof_path,60);if(r.error)return privateJson({error:'Bukti belum dapat dibuka.'},503);return privateJson({url:r.data.signedUrl,expires_in:60});}catch(e){return adminError(e);}}

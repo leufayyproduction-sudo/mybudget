@@ -1,0 +1,17 @@
+{
+  "status": "blocked",
+  "checked_at": "2026-10-02T22:54:20.973Z",
+  "checks": [
+    {
+      "label": "Dua akun berbeda",
+      "passed": true
+    },
+    {
+      "label": "Akun uji bukan admin",
+      "passed": true
+    }
+  ],
+  "sql": "pending",
+  "parallel_approval": "pending",
+  "payments": "not_tested"
+}

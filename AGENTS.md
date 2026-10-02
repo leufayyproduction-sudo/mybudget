@@ -1,5 +1,5 @@
 # My Budget
-- Scope aktif: prasyarat RLS live Phase 1, lalu Phase 2 Sesi A saja jika lolos.
+- Scope aktif: Phase 2 Sesi B admin/pengaturan/CMS; Phase 1 RLS dan Sesi A lolos.
 - Stack: Next.js App Router, TypeScript, Tailwind, Supabase Auth/Postgres.
 - UI: lucide-react, Recharts, Radix; form react-hook-form + zod.
 - app/: routes; components/: UI; lib/finance/: fungsi murni; supabase/: migration.

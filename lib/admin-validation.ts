@@ -1,0 +1,3 @@
+import { z } from 'zod';
+export const reviewSchema=z.object({order_id:z.string().uuid(),decision:z.enum(['paid','rejected']),note:z.string().trim().max(1000).default('')}).refine(v=>v.decision!=='rejected'||v.note.length>0,{message:'Catatan wajib untuk penolakan.',path:['note']});
+export const orderFilterSchema=z.object({search:z.string().max(120).default(''),status:z.enum(['','pending','submitted','paid','rejected','expired']).default(''),product:z.string().uuid().nullable().default(null),from:z.string().date().nullable().default(null),to:z.string().date().nullable().default(null),offset:z.number().int().min(0).max(1000000).default(0)}).refine(v=>!v.from||!v.to||v.from<=v.to,{message:'Tanggal awal harus sebelum tanggal akhir.'});
