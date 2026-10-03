@@ -11,9 +11,9 @@ begin
  end if;
  select count(*),(array_agg(id))[1],bool_and(email_confirmed_at is not null)
  into matches,target_id,confirmed from auth.users
- where lower(email)=lower('ahvscyyssy@gmail.com');
+ where lower(email)=lower('leufayyproduction@gmail.com');
  if matches<>1 then
-  raise exception 'Harus ada tepat satu akun ahvscyyssy@gmail.com di Authentication > Users. Daftarkan akun dahulu jika belum ada.';
+  raise exception 'Harus ada tepat satu akun leufayyproduction@gmail.com di Authentication > Users. Daftarkan akun dahulu jika belum ada.';
  end if;
  if confirmed is distinct from true then
   raise exception 'Konfirmasi email akun admin terlebih dahulu, lalu ulangi bootstrap.';
@@ -21,4 +21,4 @@ begin
  insert into public.admin_users(user_id) values(target_id) on conflict(user_id) do nothing;
 end $$;
 commit;
-select 'Admin ahvscyyssy@gmail.com sudah tersimpan; masuk di website lalu buka /admin/connect.' as result;
+select 'Admin leufayyproduction@gmail.com sudah tersimpan; masuk di website lalu buka /admin/connect.' as result;
