@@ -1,0 +1,32 @@
+-- Owner SQL Editor. Fresh users only, no password or real sign-in, full rollback.
+begin;
+create function pg_temp.assert_true(ok boolean,label text) returns void language plpgsql as $$begin if ok is distinct from true then raise exception 'FAIL: %',label;end if;end$$;
+create function pg_temp.denied(q text) returns boolean language plpgsql as $$begin execute q;return false;exception when insufficient_privilege then return true;end$$;
+select set_config('test.admin_a',gen_random_uuid()::text,true),set_config('test.admin_b',gen_random_uuid()::text,true),set_config('request.jwt.claim.sub','',true);
+insert into auth.users(id,instance_id,aud,role,email,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at)
+select id,'00000000-0000-0000-0000-000000000000'::uuid,'authenticated','authenticated',id::text||'@example.invalid',now(),'{"provider":"email","providers":["email"]}'::jsonb,'{}'::jsonb,now(),now() from (values(current_setting('test.admin_a')::uuid),(current_setting('test.admin_b')::uuid)) v(id);
+insert into public.admin_users(user_id) values(current_setting('test.admin_b')::uuid);
+select set_config('test.hash_a',encode(sha256(convert_to(current_setting('test.admin_a')||'@example.invalid','UTF8')),'hex'),true),set_config('test.hash_b',encode(sha256(convert_to(current_setting('test.admin_b')||'@example.invalid','UTF8')),'hex'),true);
+set local role anon;
+select set_config('request.jwt.claims','{}',true);
+select set_config('test.attempt_a',public.begin_admin_login(current_setting('test.hash_a'))->>'attempt_id',true);
+select pg_temp.assert_true(pg_temp.denied($q$select public.finish_admin_login(current_setting('test.attempt_a')::uuid,true)$q$),'anonymous success audit denied');
+select public.finish_admin_login(current_setting('test.attempt_a')::uuid,false);
+select public.finish_admin_login(current_setting('test.attempt_a')::uuid,false);
+select pg_temp.assert_true(pg_temp.denied('select * from public.admin_login_attempts'),'attempt IDs not publicly listed');
+do $$begin for i in 1..4 loop perform public.begin_admin_login(current_setting('test.hash_a'));end loop;end$$;
+select pg_temp.assert_true(not (public.begin_admin_login(current_setting('test.hash_a'))->>'allowed')::boolean,'sixth attempt rate limited');
+select set_config('test.attempt_b',public.begin_admin_login(current_setting('test.hash_b'))->>'attempt_id',true);
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',current_setting('test.admin_a'),'role','authenticated')::text,true);
+select pg_temp.assert_true(pg_temp.denied($q$select public.finish_admin_login(current_setting('test.attempt_b')::uuid,true)$q$),'non-admin success audit denied');
+select set_config('request.jwt.claims',jsonb_build_object('sub',current_setting('test.admin_b'),'role','authenticated')::text,true);
+select pg_temp.assert_true(pg_temp.denied($q$select public.finish_admin_login(current_setting('test.attempt_a')::uuid,true)$q$),'admin cannot claim another identity attempt');
+select public.finish_admin_login(current_setting('test.attempt_b')::uuid,true);
+select public.finish_admin_login(current_setting('test.attempt_b')::uuid,true);
+reset role;
+select pg_temp.assert_true((select count(*)=1 from public.audit_logs where object_id=current_setting('test.attempt_a') and action='admin.login.failed' and admin_id is null),'one anonymous failed audit without identity');
+select pg_temp.assert_true((select count(*)=1 from public.audit_logs where object_id=current_setting('test.attempt_b') and action='admin.login.success' and admin_id=current_setting('test.admin_b')::uuid),'one verified success audit');
+select pg_temp.assert_true((select relrowsecurity from pg_class where oid='public.admin_login_attempts'::regclass),'attempt RLS enabled');
+select 'PASS: admin login audit, role gate and rate limit; temporary users rollback' as result;
+rollback;

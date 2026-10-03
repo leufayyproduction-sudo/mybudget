@@ -29,6 +29,7 @@ input,select{width:100%;border:1px solid #dce3d7;background:var(--surface);color
 .steps>div{border-color:var(--blue-200)}.skeleton{background:var(--blue-50)}.fab{color:white;box-shadow:0 5px 15px #2563eb26}
 .chart-legend .expense-dot{background:#64748b}.transaction-info strong{font-size:13px}.transaction-info span,.budget-amounts,.budget-amounts small,.goal-title small{font-size:11px}.budget-row>div:first-child{font-size:13px}.budget-row>div:first-child>span{font-size:11px}.goal-title strong{font-size:13px}.chart-legend,.section-heading p{font-size:11px}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.admin-login{width:min(100%,480px);padding:48px 20px;margin:auto}.admin-login>.wordmark{margin-bottom:28px}.admin-login .panel{padding:28px}.admin-login h1{font-size:26px;line-height:1.25;margin:16px 0 10px}.admin-login .form{margin:26px 0 18px}.admin-login-heading{display:flex;align-items:center;gap:12px;color:var(--blue-600)}.admin-session-controls{display:flex;justify-content:flex-end;gap:12px;align-items:center;padding:12px 24px;background:var(--blue-50);border-bottom:1px solid var(--line);font-size:12px}
 /* Official supplied brand asset; original image is preserved. */
 .wordmark{width:122px;flex-shrink:0;line-height:0;display:inline-flex;justify-content:center;padding:0!important}
 .official-logo{width:100%;height:auto;object-fit:contain;mix-blend-mode:multiply}

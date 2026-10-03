@@ -1,5 +1,22 @@
 # Progress My Budget
 
+## Login admin langsung — 2026-10-03
+- [done] Source /admin/login email/password Supabase Auth server; is_admin guard, generic error identik, non-admin signout lokal tanpa sesi admin. /admin/connect dan legacy session POST redirect login.
+- [done] Cookie admin HttpOnly/Strict/root path, Secure HTTPS, cap 8 jam/JWT expiry; logout seluruh halaman menghapus root + legacy /admin. Halaman/API tanpa JWT/role valid redirect login; cookie-only API, same-origin mutation, role recheck server. Pembelian/unggah tidak bergantung sesi aplikasi utama.
+- [done] Migration 014 rate limit 5/hash email normalisasi/15 menit dengan advisory lock; audit gagal nullable actor, sukses wajib role + email identity binding; nonce attempt tidak dapat didaftar, retry audit idempotent. Tanpa password/token audit atau service role.
+### Sudah diuji
+- 59/59 unit tests passed; 5 tests login terkait diulang setelah patch final dan passed. Password salah/non-admin hasil identik, signout/no acceptance, role + audit success mandatory, limit sebelum Auth request, cookie kedua path, redirect middleware tanpa sesi. TypeScript/lint passed; build/HTTP akhir dicatat pada hasil akhir di bawah.
+- SQL rollback template memakai dua akun Auth baru, tanpa akun asli atau password; rate/role/audit tests prepared, belum PASS Supabase.
+- Build production final passed (TypeScript/lint termasuk), targeted 5 tests final passed; HTTP localhost 11 checks passed: /admin/login 200, empat halaman admin dan empat API serta /admin/connect redirect tanpa sesi, missing-origin login 403. docs/admin-login-result.json berstatus passed_public_guards_configuration_pending; migration 014 belum tersedia. Server sementara dihentikan, belum klaim login/audit database live lolos.
+### Belum bisa diuji
+- Migration 014 belum dikonfirmasi terpasang; login admin/non-admin dan audit/rate limit database live menunggu SQL. HTTPS Secure, expiry JWT riil, lintas instance dan visual tidak diuji; tanpa browser/deploy.
+- Sisa verifikasi rilis/Phase 3 dari bagian terdahulu tetap pending; fitur ini tidak menyelesaikannya.
+### Keputusan diambil
+- Rate per identitas, bukan IP; database konsisten antar instance. Attempt telemetry 7 hari; audit permanen append-only, throttle audit sekali/window. Anonymous failure events berbasis capability adalah telemetry, bukan identitas terverifikasi; hanya admin ber-JWT matching email dapat mencatat success.
+- Tidak ada refresh cookie; masa sesi min(8 jam, expiry access JWT). Logout menghapus cookie, tidak menjanjikan revokasi access JWT sebelum expiry dan tidak logout aplikasi utama. Login fail-closed bila RPC/audit tidak tersedia.
+- User metadata tidak dipakai untuk role. Path cookie diperluas ke / agar API memakai cookie; expiry eksplisit kedua path mencegah cookie lama /admin menutupi sesi baru. API bearer aplikasi utama tidak lagi membuka area admin.
+- Langkah berikutnya: migration 014 → supabase/tests/admin_login.sql sampai PASS → ulang verifier login lokal. Jangan deploy atau mulai AI.
+
 ## Penutupan verifikasi rilis — 2026-10-03
 - [done] Tes lokal ekspor Premium (handler server dipisahkan agar gate fail-closed dapat diuji), audit source/history, dan pengujian HTTP admin/CSV.
 - [doing] Penutupan live Phase 2: bukan status siap rilis. Premium positif/expiry/isolation dan fixture duplicate positif-negatif menunggu SQL pemilik. Status bagian ini mengungguli catatan lama.

@@ -1,2 +1,2 @@
-import AdminConnect from '@/components/admin-connect';
-export default function Page(){return <AdminConnect/>;}
+import {redirect} from 'next/navigation';
+export default function Page(){redirect('/admin/login');}

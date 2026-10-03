@@ -1,0 +1,53 @@
+{
+  "checked_at": "2026-10-03T15:44:26.658Z",
+  "status": "passed_public_guards_configuration_pending",
+  "checks": [
+    {
+      "name": "login page public",
+      "passed": true
+    },
+    {
+      "name": "/admin redirects without session",
+      "passed": true
+    },
+    {
+      "name": "/admin/settings redirects without session",
+      "passed": true
+    },
+    {
+      "name": "/admin/content redirects without session",
+      "passed": true
+    },
+    {
+      "name": "/admin/content/preview redirects without session",
+      "passed": true
+    },
+    {
+      "name": "/admin/connect redirects without session",
+      "passed": true
+    },
+    {
+      "name": "/api/admin/purchases redirects without session",
+      "passed": true
+    },
+    {
+      "name": "/api/admin/settings redirects without session",
+      "passed": true
+    },
+    {
+      "name": "/api/admin/content redirects without session",
+      "passed": true
+    },
+    {
+      "name": "/api/admin/proof redirects without session",
+      "passed": true
+    },
+    {
+      "name": "missing origin denied",
+      "passed": true
+    }
+  ],
+  "pending": [
+    "Apply migration 014; login, real audit/role/rate-limit pending"
+  ]
+}

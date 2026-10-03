@@ -25,3 +25,5 @@
 - Insights/reports: migration 011, node scripts/verify-advanced-analysis.mjs; .rls-advanced-analysis-test.sql rollback. Pro only; CSV laporan API terpisah dari CSV Phase 2.
 - Tools/Forecast: migration 012 lalu 013; verify-phase3-remaining.mjs dan verify-phase3-http.mjs; exact paid product, tanpa bypass Pro.
 - Paralel: setup SQL COMMIT manual, verify-phase3-parallel.mjs, cleanup SQL manual. Jangan eksekusi owner setup otomatis.
+- Admin login: /admin/login, migration 014, cookie only + same-origin mutation; legacy connect redirect. verify-admin-login.mjs; SQL rollback admin_login.sql fresh users.
+- Rate 5/hash-email/15m DB, audit failure capability anonim, success is_admin + identity; JWT expiry atau maks 8h, tanpa refresh/service role.

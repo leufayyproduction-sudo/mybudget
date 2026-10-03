@@ -1,5 +1,17 @@
 # My Budget — Phase 1 dan Phase 2 bertahap
 
+## Login admin langsung
+
+Buka `/admin/login`, isi email/password akun Supabase yang telah ditambahkan pemilik ke admin_users. Tidak perlu login aplikasi utama. `/admin/connect` menjadi redirect. Server memverifikasi password melalui Supabase Auth, lalu is_admin; non-admin langsung sign out dari sesi login khusus tersebut dan mendapat pesan identik dengan password salah. Tidak ada role dari user_metadata atau UI untuk menaikkan role.
+
+Jalankan migration `supabase/migrations/014_admin_login.sql` (memerlukan migration 005–006 yang sudah ada). Login fail-closed sebelum RPC baru tersedia. Jalankan `supabase/tests/admin_login.sql` utuh di SQL Editor sampai PASS: akun Auth sementara, anonymous/non-admin ditolak mencatat sukses, identity binding, retry audit idempotent, rate limit dan RLS. Semua BEGIN/ROLLBACK tanpa menyentuh akun admin asli/password. Jika gagal, ROLLBACK terlebih dahulu.
+
+Rate limit database: 5 percobaan per hash email ternormalisasi/15 menit, lock serial lintas instance; bukan pembatasan IP. Attempt IDs tidak bisa didaftar klien. Failure telemetry anonim memerlukan UUID capability yang dihasilkan begin_admin_login; bukan bukti identitas. Audit sukses hanya dari JWT admin yang emailnya cocok. Password/token tidak masuk audit. Attempt telemetry dibersihkan setelah 7 hari; audit tetap append-only. Blok rate dicatat paling sekali per hash/15 menit.
+
+Cookie mybudget_admin_session HttpOnly, SameSite Strict, Secure pada HTTPS, path `/` supaya API turut menerima cookie; maksimal 8 jam dan mengikuti expiry JWT yang lebih pendek (umumnya perlu login ulang lebih cepat). Tidak menyimpan refresh token atau memperpanjang sesi otomatis. Role/JWT diperiksa pada middleware dan tiap server handler; API admin tidak menerima bearer aplikasi utama sebagai pengganti cookie. POST/DELETE membutuhkan origin yang sama. Logout menghapus path baru dan lama, tanpa logout aplikasi utama; tidak menjanjikan pencabutan JWT yang telah diterbitkan sebelum expiry.
+
+Unit test dan HTTP tanpa browser: `node scripts/verify-admin-login.mjs` dengan server localhost:3001 dan akun uji A non-admin/B admin. Skrip hanya mencatat status, tidak password/cookie. Live login/audit baru tetap perlu migration 014; laporan docs/admin-login-result.json. Visual dan HTTPS belum diuji, tidak deploy.
+
 ## Digital tools dan recurring Forecast — hasil terbaru
 
 Empat planner tersedia di `/tools`: Budget, Savings, Freelancer finance dan Goal. Server mengecek pesanan **paid produk tepat**, bukan plan Pro saja; menghitung hasil/CSV dan menyimpan input tervalidasi dengan owner RLS. Hasil dihitung ulang saat dibuka. File pendukung opsional lewat riwayat pembelian, paid gate dan signed URL 60 detik; tidak ada URL publik permanen. Produk awal inactive; tidak ada pembayaran atau deployment nyata.
@@ -37,7 +49,7 @@ Migration 001–005 sudah terpasang dan checkout dilaporkan PASS. **Jangan mengu
 3. `supabase/migrations/008_site_content.sql` — draft, preview dan publish landing.
 4. Setelah migration, jalankan **secara manual** `supabase/admin-bootstrap.sql`. File ini mencari akun Auth `leufayyproduction@gmail.com` yang emailnya telah dikonfirmasi, lalu memasukkannya ke admin_users secara idempotent. Jika akun belum ada, daftar dan konfirmasi dulu. Tidak memakai user_metadata untuk role, tidak mengaktifkan Premium. File ini belum dijalankan oleh agen.
 
-Masuk dengan akun admin tersebut di beranda website, lalu buka `/admin/connect`. Upload QRIS resmi melalui `/admin/settings` hanya setelah merchant dan verifikasi manual siap. CMS melalui `/admin/content`: simpan draft → buka preview → publish. Harga landing diambil dari katalog, bukan field harga CMS. Logo dapat diganti lewat aset tervalidasi atau memakai wordmark; icon tab tetap aset resmi awal.
+Masuk langsung dengan akun admin tersebut di `/admin/login`. Upload QRIS resmi melalui `/admin/settings` hanya setelah merchant dan verifikasi manual siap. CMS melalui `/admin/content`: simpan draft → buka preview → publish. Harga landing diambil dari katalog, bukan field harga CMS. Logo dapat diganti lewat aset tervalidasi atau memakai wordmark; icon tab tetap aset resmi awal.
 
 ### Sudah diuji
 - Build akhir `.next-verify` lolos, termasuk lint dan TypeScript; 27/27 unit tests lolos (finance, checkout, admin, promo/upload, URL dan struktur CMS). Diff whitespace diperiksa.
@@ -80,7 +92,7 @@ Ekspor CSV Plus/Pro ada di `/api/exports/transactions`: hak akses dicek server l
 
 ### Admin pembelian — Sesi B
 Setelah migration 005, jalankan `006_admin_purchases.sql`. Buat admin pertama lewat SQL pemilik: `insert into public.admin_users(user_id) values ('UUID-AKUN-ADMIN') on conflict do nothing;`. UUID dari Authentication → Users. Jangan menjadikan akun pengujian admin permanen. Tidak ada service-role key atau role dari user_metadata.
-Masuk melalui beranda, buka `/admin/connect`, lalu klik buka akun yang sedang masuk. Server memverifikasi JWT dan is_admin, menyimpan access token saja dalam cookie HttpOnly SameSite Strict (30 menit), kemudian memeriksa akses lagi pada middleware, halaman dan setiap API/RPC. Saat token/cookie habis, buka koneksi admin lagi. Tombol Tutup sesi admin menghapus cookie. UI tidak menyimpan refresh token di cookie server.
+Masuk langsung di `/admin/login`. Server memverifikasi Supabase Auth dan is_admin, lalu menyimpan access token di cookie HttpOnly/SameSite Strict, maksimal 8 jam atau expiry JWT yang lebih pendek. Middleware/halaman/API memeriksa role ulang. Saat cookie/JWT habis, login kembali; tombol Keluar dari admin menghapus kedua path cookie. Refresh token tidak disimpan di browser/cookie admin.
 Halaman `/admin` menampilkan ringkasan paid, daftar/filter, referensi duplikat, bukti signed URL 60 detik, catatan pemeriksaan dan audit. Admin wajib memeriksa penerimaan dana merchant; tombol persetujuan tidak membuktikan pembayaran otomatis. RPC mengunci baris dan menserialkan perpanjangan per pengguna; source_order_id unik, persetujuan ulang tidak menambah akses atau audit kedua. Paket sama diperpanjang sesudah masa sebelumnya; Plus/Pro berbeda tidak dikonversi atau prorata.
 `npm run verify:admin` menyiapkan `.rls-admin-test.sql` dan menguji penolakan non-admin. Jalankan SQL itu sebagai pemilik di SQL Editor; seluruh fixture/admin sementara di-rollback. Persetujuan paralel masih membutuhkan pengujian terpisah; tidak diklaim teruji oleh SQL berurutan ini. Log append-only, transaksi/budget/goal pengguna tidak mendapat policy admin.
 
