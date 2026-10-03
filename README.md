@@ -1,11 +1,41 @@
 # My Budget — Phase 1 dan Phase 2 bertahap
 
+## Digital tools dan recurring Forecast — hasil terbaru
+
+Empat planner tersedia di `/tools`: Budget, Savings, Freelancer finance dan Goal. Server mengecek pesanan **paid produk tepat**, bukan plan Pro saja; menghitung hasil/CSV dan menyimpan input tervalidasi dengan owner RLS. Hasil dihitung ulang saat dibuka. File pendukung opsional lewat riwayat pembelian, paid gate dan signed URL 60 detik; tidak ada URL publik permanen. Produk awal inactive; tidak ada pembayaran atau deployment nyata.
+
+### Setup dan SQL
+
+Sesudah migration 001–011 yang sudah terpasang, jalankan lengkap `supabase/migrations/012_digital_planners.sql`, lalu `supabase/migrations/013_recurring_forecast.sql` di SQL Editor. Jangan ulang migration yang sudah berhasil. Jalankan `.rls-digital-planners-test.sql` dan `.rls-recurring-forecast-test.sql` utuh hingga **PASS**; keduanya BEGIN/ROLLBACK. Langkah pengguna memakai authenticated + JWT sub; TEST orders bukan pembayaran. Bila gagal, `ROLLBACK;` sebelum mencoba lagi. Template di supabase/tests; file lokal gitignored tanpa key/password. Gunakan akun khusus pengujian.
+
+Paralel membutuhkan fixture COMMIT agar dua API request melihat data yang sama: jalankan `.rls-phase3-parallel-setup.sql` hingga **READY**, `node scripts/verify-phase3-parallel.mjs`, lalu `.rls-phase3-parallel-cleanup.sql` hingga **PASS**. Setup terbatas akun A kosong: satu TEST rule, snapshot langganan; tanpa pembayaran/perubahan role admin. Verifier menjalankan dua apply bersamaan + retry, membersihkan fixture dan memulihkan langganan. SQL cleanup terakhir menghapus helper dan menjadi recovery jika proses terputus. Jangan ulang setup sebelum cleanup selesai. Setup belum dijalankan otomatis.
+
+Ulang `node scripts/verify-phase3-remaining.mjs` setelah migration. Untuk HTTP tanpa browser, jalankan server lokal kemudian `node scripts/verify-phase3-http.mjs` (default localhost:3001; RLS_TEST_APP_URL boleh localhost lain). Memakai public key + akun lokal, tanpa menampilkan key. Gate checks tidak menggantikan owner SQL assertions.
+
+### Sudah diuji
+
+- Planner/regresi 48/48 passed. Suite Forecast 51: 50 passed, satu ekspektasi kalender dikoreksi; ketiga tests terkait diulang passed, 48 lainnya sudah passed. TypeScript/lint/build akhir passed.
+- SDK live 5 checks dan HTTP localhost 15 checks passed: anonim 401, dua akun Free 403 untuk analytics/insights/reports/CSV. Laporan docs/phase3-remaining-result.json dan docs/phase3-http-result.json; server sementara dihentikan.
+
+### Belum bisa diuji
+
+- Migration 012–013 belum tersedia pada cek live: paid planner/isolation/ekspor, Forecast recurring/expiry/isolation dan paralel nyata pending owner SQL. Assertions Pro positif/expiry/isolation lengkap 009–011 belum diklaim PASS oleh cek gate ini.
+- UI 375/768/1280 tidak diperiksa sesuai instruksi. Tidak deploy, tidak menguji merchant/QRIS/pembayaran nyata. CSV Premium Phase 2, referensi duplikat dan UI admin tetap terbuka.
+
+### Keputusan diambil
+
+SKU inactive: budget-planner/savings-planner/goal-planner Rp9.900, freelancer-planner Rp14.900; harga/status diatur admin. Akses tool mengikuti paid order, bukan expiry subscription. Planner tanpa bunga/jaminan; alokasi nol tidak memaksakan tanggal. Simpan input saja, output dihitung server. Batas integer nominal Rp1 triliun, horizon 1–1200 bulan, jumlah proyek 0–1000.
+
+Forecast menambahkan income/expense recurring pada due-date; histori ledger dipisahkan dari baseline dan jadwal/budget memakai residual agar tidak ganda. Kuartil/median historis tetap skenario 30/60/90 hari; jadwal diasumsikan terlaksana. Due hari ini/terlewat perlu catch-up dahulu. Tanpa 013 health/projection memakai RPC lama, Forecast menampilkan konfigurasi belum tersedia. Goal tidak mengurangi saldo dua kali; tanpa API AI.
+
+Bagian berikut adalah catatan sebelumnya; status terbaru di atas mengungguli catatan konfigurasi lama.
+
 ## Serah terima Sesi B — urutan SQL manual
 Migration 001–005 sudah terpasang dan checkout dilaporkan PASS. **Jangan mengulang migration yang sudah terpasang.** Jalankan file lengkap di Supabase → SQL Editor → New query → Run, satu per satu:
 1. `supabase/migrations/006_admin_purchases.sql` — review pembelian, audit, otorisasi admin. Lewati jika sudah berhasil diterapkan.
 2. `supabase/migrations/007_product_settings.sql` — pengaturan produk/merchant, bucket file privat, hak unduh dan log.
 3. `supabase/migrations/008_site_content.sql` — draft, preview dan publish landing.
-4. Setelah migration, jalankan **secara manual** `supabase/admin-bootstrap.sql`. File ini mencari akun Auth `ahvscyyssy@gmail.com` yang emailnya telah dikonfirmasi, lalu memasukkannya ke admin_users secara idempotent. Jika akun belum ada, daftar dan konfirmasi dulu. Tidak memakai user_metadata untuk role, tidak mengaktifkan Premium. File ini belum dijalankan oleh agen.
+4. Setelah migration, jalankan **secara manual** `supabase/admin-bootstrap.sql`. File ini mencari akun Auth `leufayyproduction@gmail.com` yang emailnya telah dikonfirmasi, lalu memasukkannya ke admin_users secara idempotent. Jika akun belum ada, daftar dan konfirmasi dulu. Tidak memakai user_metadata untuk role, tidak mengaktifkan Premium. File ini belum dijalankan oleh agen.
 
 Masuk dengan akun admin tersebut di beranda website, lalu buka `/admin/connect`. Upload QRIS resmi melalui `/admin/settings` hanya setelah merchant dan verifikasi manual siap. CMS melalui `/admin/content`: simpan draft → buka preview → publish. Harga landing diambil dari katalog, bukan field harga CMS. Logo dapat diganti lewat aset tervalidasi atau memakai wordmark; icon tab tetap aset resmi awal.
 

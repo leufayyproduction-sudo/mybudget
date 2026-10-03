@@ -6,6 +6,7 @@ select pg_temp.assert_true('__USER_A__'<>'__USER_B__','different accounts');
 select pg_temp.assert_true((select count(*)=4 from public.digital_tool_products),'four protected product mappings');
 -- These dedicated test users must not already own paid planners.
 select pg_temp.assert_true(not exists(select 1 from public.orders o join public.digital_tool_products m on m.product_id=o.product_id where o.user_id in ('__USER_A__','__USER_B__') and o.status='paid'),'no existing paid planner orders');
+insert into public.subscriptions(user_id,plan,status,expires_at) values('__USER_B__','pro','active',now()+interval '1 day') on conflict(user_id) do update set plan='pro',status='active',expires_at=excluded.expires_at;
 set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"__USER_A__","role":"authenticated"}',true);
 select pg_temp.assert_true(not public.can_use_tool('budget'),'unpaid tool denied');
@@ -34,6 +35,7 @@ select pg_temp.assert_true(pg_temp.denied('insert into public.planner_results(us
 reset role;
 set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"__USER_B__","role":"authenticated"}',true);
+select pg_temp.assert_true(public.get_effective_plan()='pro','B is Pro but still needs paid tool');
 select pg_temp.assert_true(not public.can_use_tool('budget'),'B does not inherit A paid access');
 select pg_temp.assert_true(not exists(select 1 from public.planner_results where id=current_setting('test.planner')::uuid),'B cannot read A results');
 select pg_temp.assert_true(pg_temp.denied('select public.get_tool_data(''budget'')'),'B RPC denied');

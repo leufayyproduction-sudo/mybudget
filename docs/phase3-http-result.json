@@ -1,0 +1,123 @@
+{
+  "checked_at": "2026-10-03T12:45:25.751Z",
+  "status": "passed_available_checks_configuration_pending",
+  "checks": [
+    {
+      "name": "anonymous /api/analytics",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "name": "anonymous /api/advanced-insights",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "name": "anonymous /api/advanced-reports",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "name": "anonymous /api/tools/budget",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "name": "anonymous /api/tools/savings",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "name": "anonymous /api/tools/freelancer",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "name": "anonymous /api/tools/goal",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "name": "A /api/analytics gate",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "A /api/advanced-insights gate",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "A /api/advanced-reports gate",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "A CSV report gate",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "A budget",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "A savings",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "A freelancer",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "A goal",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "B /api/analytics gate",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "B /api/advanced-insights gate",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "B /api/advanced-reports gate",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "B CSV report gate",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "B budget",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "B savings",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "B freelancer",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "B goal",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    }
+  ],
+  "visual": "not run",
+  "owner_fixture_isolation": "pending SQL rollback"
+}

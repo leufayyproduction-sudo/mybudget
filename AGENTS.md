@@ -1,5 +1,5 @@
 # My Budget
-- Scope aktif: Phase 3 Sesi B insights/reports saja; recurring PASS menurut pengguna; tiga item Phase 2 tetap terbuka.
+- Scope aktif: tools/Forecast lokal selesai; live 012–013 dan paralel pending; tiga item Phase 2 tetap terbuka.
 - Stack: Next.js App Router, TypeScript, Tailwind, Supabase Auth/Postgres.
 - UI: lucide-react, Recharts, Radix; form react-hook-form + zod.
 - app/: routes; components/: UI; lib/finance/: fungsi murni; supabase/: migration.
@@ -23,3 +23,5 @@
 - node scripts/verify-pro-analytics.mjs; SQL rollback lokal .rls-pro-analytics-test.sql. Jangan mulai AI.
 - Recurring: migration 010, node scripts/verify-recurring.mjs; .rls-recurring-test.sql rollback. Ledger permanen rule/date, lock per owner, catch-up 500.
 - Insights/reports: migration 011, node scripts/verify-advanced-analysis.mjs; .rls-advanced-analysis-test.sql rollback. Pro only; CSV laporan API terpisah dari CSV Phase 2.
+- Tools/Forecast: migration 012 lalu 013; verify-phase3-remaining.mjs dan verify-phase3-http.mjs; exact paid product, tanpa bypass Pro.
+- Paralel: setup SQL COMMIT manual, verify-phase3-parallel.mjs, cleanup SQL manual. Jangan eksekusi owner setup otomatis.

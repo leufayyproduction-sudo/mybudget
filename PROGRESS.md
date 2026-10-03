@@ -1,5 +1,22 @@
 # Progress My Budget
 
+## Hasil terbaru — tools/Forecast (2026-10-03)
+- [done] Empat planner, paid-product server gate, simpan input owner-RLS, ekspor server; commit 4f87536. Forecast recurring income/expense dan residual tanpa duplikasi; commit 5757042. Navigasi /tools tersambung.
+- [doing] Verifikasi live keseluruhan: migration 012–013 belum tersedia. Bagian ini mengungguli status historis di bawah; bukan klaim Phase 3 lengkap/live.
+### Sudah diuji
+- Suite planner/regresi 48/48 passed. Suite Forecast 51: 50 passed; satu ekspektasi kalender dikoreksi, ketiga tests terkait diulang passed (48 lainnya sudah passed). Suite penuh tidak diulang setelah koreksi.
+- TypeScript/lint/build production akhir passed termasuk navigasi baru. SDK live 5 gate checks, HTTP localhost 15 checks passed: anonim 401, dua akun Free 403 analytics/insights/reports/CSV. Laporan docs/phase3-remaining-result.json dan docs/phase3-http-result.json. Server sementara dihentikan.
+- RPC analytics/insights lama tersedia, bukan klaim assertions SQL 011 lengkap. SQL rollback dan verifier paralel disiapkan, sintaks/lint passed; owner SQL belum dieksekusi.
+### Belum bisa diuji
+- Paid/unpaid/Pro-tanpa-pembelian planner, simpan/isolation A-B/CSV paid, Forecast jadwal/expiry/isolation live menunggu 012–013 dan SQL PASS. Paralel nyata belum dijalankan; PASS recurring pengguna bukan bukti paralel.
+- Pro positif/expiry/isolation assertions 009–011 bila belum PASS; UI 375/768/1280 tidak diuji sesuai instruksi. QRIS merchant/pembayaran nyata tidak diuji. Tidak deploy atau API AI.
+- Tetap terbuka dan tidak dikerjakan: CSV Premium Phase 2, referensi duplikat, UI admin.
+### Keputusan diambil
+- SKU inactive: budget-planner/savings-planner/goal-planner Rp9.900, freelancer-planner Rp14.900. Tool memerlukan paid exact product, tanpa bypass Pro; akses paid tidak mengikuti expiry langganan. Harga/status melalui admin.
+- Simpan input tervalidasi saja, output dihitung ulang server; savings/goal tanpa bunga, alokasi nol tanpa tanggal. Freelancer merupakan rencana, bukan jaminan. File pendukung opsional via riwayat pembelian, paid gate/signed URL 60 detik. Checkout tetap QRIS resmi/manual.
+- Forecast memasukkan jadwal actual due-date, memisahkan histori ledger dan residual budget/jadwal; jadwal diasumsikan terlaksana. Due hari ini/terlewat perlu apply_recurring dahulu, warning backlog tampil. Goal bukan transaksi. Tanpa 013, health/projection memakai RPC lama tetapi Forecast menampilkan konfigurasi belum tersedia.
+- Langkah berikutnya: migration 012 → 013; .rls-digital-planners-test.sql dan .rls-recurring-forecast-test.sql utuh sampai PASS (rollback). Paralel: .rls-phase3-parallel-setup.sql sampai READY → node scripts/verify-phase3-parallel.mjs → .rls-phase3-parallel-cleanup.sql sampai PASS. Setup COMMIT diperlukan untuk request berbeda; cleanup memulihkan langganan dan menghapus helper. Ulang verifier remaining/HTTP, jangan mulai AI.
+
 ## Sesi aktif — Digital tools, recurring/Forecast, verifikasi tersisa
 - [done] Empat planner lokal, migration 012: pemetaan produk terlindung, paid gate (tanpa bypass Pro), inputs tersimpan owner-RLS, hitung/CSV server. Produk seed inactive; checkout interactive tanpa file opsional tetap memerlukan QRIS resmi dan verifikasi manual.
 - [done] Integrasi recurring Forecast lokal + migration 013, jadwal tanggal aktual dan baseline tanpa hitung ganda. [todo] Verifikasi live baru/parallel/expiry + HTTP tanpa browser. Tiga item Phase 2 tetap terbuka. Tidak deploy atau AI.
