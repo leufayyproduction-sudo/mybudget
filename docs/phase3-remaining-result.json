@@ -1,0 +1,84 @@
+{
+  "checked_at": "2026-10-03T12:36:15.113Z",
+  "status": "blocked_configuration",
+  "checks": [
+    {
+      "name": "get_pro_analytics",
+      "passed": true,
+      "configuration": "available"
+    },
+    {
+      "name": "get_advanced_insight_data",
+      "passed": true,
+      "configuration": "available"
+    },
+    {
+      "name": "get_forecast_analytics",
+      "passed": null,
+      "configuration": "migration missing"
+    },
+    {
+      "name": "Free recurring denied",
+      "passed": true
+    },
+    {
+      "name": "budget paid gate",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "savings paid gate",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "freelancer paid gate",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "goal paid gate",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "get_pro_analytics",
+      "passed": true,
+      "configuration": "available"
+    },
+    {
+      "name": "get_advanced_insight_data",
+      "passed": true,
+      "configuration": "available"
+    },
+    {
+      "name": "get_forecast_analytics",
+      "passed": null,
+      "configuration": "migration missing"
+    },
+    {
+      "name": "budget paid gate",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "savings paid gate",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "freelancer paid gate",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    },
+    {
+      "name": "goal paid gate",
+      "passed": null,
+      "configuration": "migration 012 missing"
+    }
+  ],
+  "owner_sql": "pending",
+  "parallel_recurring": "pending (user-reported sequential PASS does not verify parallel)",
+  "visual": "not run by instruction",
+  "mutation": "none"
+}

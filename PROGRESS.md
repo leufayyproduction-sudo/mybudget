@@ -2,8 +2,10 @@
 
 ## Sesi aktif — Digital tools, recurring/Forecast, verifikasi tersisa
 - [done] Empat planner lokal, migration 012: pemetaan produk terlindung, paid gate (tanpa bypass Pro), inputs tersimpan owner-RLS, hitung/CSV server. Produk seed inactive; checkout interactive tanpa file opsional tetap memerlukan QRIS resmi dan verifikasi manual.
-- [todo] Integrasi recurring Forecast dan migration 013; verifikasi live baru/parallel/expiry + HTTP tanpa browser. Tiga item Phase 2 tetap terbuka. Tidak deploy atau AI.
+- [done] Integrasi recurring Forecast lokal + migration 013, jadwal tanggal aktual dan baseline tanpa hitung ganda. [todo] Verifikasi live baru/parallel/expiry + HTTP tanpa browser. Tiga item Phase 2 tetap terbuka. Tidak deploy atau AI.
 - Sudah diuji: 48/48 unit tests planner dan regresi; TypeScript/build termasuk lint passed. SQL rollback template prepared; bukan PASS live. Halaman /tools (navigasi statis) ditambahkan sebelum build final nanti.
+- Forecast: suite penuh 51 tests awal 50 passed; satu ekspektasi kalender diperbaiki (90 hari sejak 1 Oktober tidak mencakup 31 Desember). Tiga tests terkait diulang dan semuanya passed; 48 tests lainnya sudah passed. TypeScript/build termasuk lint passed. Bukan klaim suite penuh diulang.
+- Live SDK tanpa mutasi: 5 pemeriksaan gate passed; RPC/migration baru belum tersedia (docs/phase3-remaining-result.json blocked_configuration). Dua SQL rollback lokal disiapkan. Paralel masih pending; PASS recurring pengguna tidak otomatis berarti paralel teruji.
 
 ## Sesi aktif — Advanced insights dan Advanced reports saja
 - Recurring migration 010 terpasang dan uji PASS menurut pengguna; hasil ini user-reported, bukan eksekusi agen. Tidak mengulang slice recurring.
