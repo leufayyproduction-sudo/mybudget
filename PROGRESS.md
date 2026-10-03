@@ -1,5 +1,20 @@
 # Progress My Budget
 
+## Phase 3 Sesi B — recurring dikerjakan lebih dahulu
+- [done] Implementasi lokal recurring: migration 010, RPC Plus/Pro, ledger unik, lock pengguna, catch-up 500/panggilan, CRUD/jeda/lanjut, asal transaksi dari ledger. Tidak mengubah trigger kuota lama.
+- [todo] Advanced insights → Advanced reports/CSV laporan → empat Digital tools → verifikasi live lengkap. Sesi A migration 009 terpasang menurut pengguna; hasil assertions akhir belum dilaporkan.
+- Tetap terbuka dan tidak dikerjakan: CSV Premium Phase 2, referensi duplikat, UI admin. Tanpa browser/screenshot/deploy/AI.
+### Sudah diuji — recurring
+- 38/38 unit tests penuh passed (termasuk 3 recurring: 31/Februari/kabisat, minggu lintas tahun, catch-up/end/batch/repeat). TypeScript dan lint passed. Build production passed dengan MYBUDGET_LOW_MEMORY=1, heap 768 MB dan satu worker. Build sebelumnya gagal alokasi memori pada komputer sekitar 650 MB RAM kosong; cache baru dan mode opt-in mengatasi.
+- Verifier menggunakan public key + akun uji, tanpa mutasi; SQL fixture dan env gitignored. Penanda recurring dibaca dari ledger, bukan field origin kiriman pengguna.
+### Belum bisa diuji — recurring / sisa Sesi B
+- Live blocked: migration 010 belum tersedia (docs/recurring-result.json). SQL rollback siap .rls-recurring-test.sql; Free/expiry/A-B/generation/edit/repeat belum diklaim passed live. Paralel live masih todo. UI 375/768/1280 tidak diuji sesuai instruksi.
+- Advanced insights, advanced reports/CSV laporan, empat digital planner + paid gate, integrasi recurring pada Forecast, dan verifikasi lengkap bagian 3 belum dikerjakan.
+### Keputusan — recurring
+- RPC security definer terbatas selalu auth.uid + plan Plus/Pro, tanpa user_id browser; tabel rules/ledger tidak boleh ditulis langsung. Policy baca rules ikut entitlement; transaksi lama tetap terbaca setelah expiry.
+- Ledger tidak ikut dihapus saat aturan/transaksi dihapus; unique(rule_id,due_on), per-user lock sama urutan dengan kuota. Tanggal 31 kembali ke 31 setelah bulan pendek. Jeda melewati masa jeda; lanjut/edit jadwal sesudah hari ini. Nominal edit berlaku untuk transaksi belum dibuat. Maksimal 500/panggilan; sisa tersedia lewat tombol/kunjungan berikutnya.
+- Kapasitas sesi dipakai menyelesaikan slice paling berisiko hingga build stabil; berhenti setelah commit recurring. Langkah berikutnya: terapkan migration 010 dan jalankan SQL rollback sampai PASS, kemudian slice Advanced insights, Reports, Tools, dan verifikasi live/paralel. Tidak memulai AI.
+
 ## Phase 3 Sesi A — izin terbaru pengguna
 - [done] Implementasi lokal Financial health, Forecast, Goal projection. Verifikasi live migration 009 masih terbuka. Sesi B dan AI tidak dikerjakan.
 - Pengecualian gate eksplisit: RLS dan entitlement sudah lolos; tiga item Phase 2 tidak menghalangi Sesi A.

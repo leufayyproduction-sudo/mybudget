@@ -1,4 +1,4 @@
-export type Transaction = { id: string; amount: number; type: 'income' | 'expense'; category: string; description: string; date: string };
+export type Transaction = { id: string; amount: number; type: 'income' | 'expense'; category: string; description: string; date: string; origin?: 'recurring' };
 export type Budget = { id: string; category: string; amount: number; month: string; mandatory: boolean };
 export type Goal = { id: string; name: string; target: number; saved: number; monthly: number };
 export type Profile = { name: string; purpose: string; pattern: string; fixed: number; project: number; projects: number; opening: number };

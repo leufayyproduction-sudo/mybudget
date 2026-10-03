@@ -8,3 +8,5 @@ node_modules/
 .env.local
 !.env.example
 *.tsbuildinfo
+.next-verify-recurring/
+.rls-*.log

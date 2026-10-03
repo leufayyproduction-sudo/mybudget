@@ -1,0 +1,9 @@
+{
+  "checked_at": "2026-10-03T11:07:59.896Z",
+  "status": "blocked",
+  "checks": [],
+  "rollback_sql": "pending",
+  "parallel_live": "pending",
+  "mutation": "none",
+  "reason": "Migration 010 belum tersedia; SQL rollback lokal sudah disiapkan."
+}
