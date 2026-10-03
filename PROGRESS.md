@@ -7,6 +7,7 @@
 - Tanpa browser/screenshot; migration baru tetap perlu diterapkan sebelum verifikasi live fitur baru.
 - [done] Slice Financial health: rumus murni, minimum 2 bulan penuh + budget/pemasukan/pengeluaran; UI asumsi, RPC Pro security invoker + owner filter. 29/29 tests, TypeScript dan build termasuk lint passed. Test awal sandbox ENOMEM; eksekusi ulang di luar sandbox passed.
 - Belum diuji: migration 009/live Pro dan expiry baru; bukan klaim fitur live. Bobot freelance 30/30/25/15, tetap 40/30/30; referensi surplus 20%, cadangan 3 bulan.
+- [done] Slice Forecast: 30/60/90 hari, rentang kuartil/median, tanggal negatif, tabel alternatif grafik. 32/32 tests, TypeScript/build/lint passed. Minimum 3 bulan penuh, maksimal 6; budget dan historis kategori memakai max agar tidak dihitung ganda. Recurring tidak dibuat/diasumsikan tersedia.
 
 ## Sesi aktif — Phase 2 Sesi B, admin/pengaturan/CMS
 - Pengguna meminta verifikasi live Sesi B setelah migration 006–008 dan bootstrap selesai. Tanpa browser/screenshot, output dibatasi; Phase 3 tidak dimulai.
