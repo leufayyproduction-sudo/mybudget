@@ -1,5 +1,11 @@
 # Progress My Budget
 
+## Pembaruan teks bantuan — 2026-10-04
+- [done] Judul, pengantar, tujuan kontak, catatan keamanan dan 5 FAQ diganti sesuai arahan. Default pesan “Halo My Budget, saya butuh bantuan.”; layanan setiap hari 08.00–21.00 WIB, pesan di luar jam dibalas paling lambat 1x24 jam.
+- [done] Checkout/riwayat memakai template {ID_PESANAN} ({NAMA_PRODUK}), substitusi hanya ID/nama produk. Pesan CMS tetap dapat diubah, termasuk memakai placeholder; setting tersimpan tidak ditimpa.
+- Sudah diperiksa: patch konten/template; belum bisa diuji: tes terarah gagal sebelum assertions karena ENOMEM pada node:os. Tidak menjalankan build/browser/deploy.
+- Keputusan: FAQ pemeriksaan pembayaran menyebut target 1x24 jam; tidak menambahkan rujukan Kebijakan Privasi yang belum diverifikasi. Default SQL hanya mengisi konten yang belum punya support; admin perlu edit draft → preview → publish untuk konten yang sudah tersimpan.
+
 ## Kontak & bantuan WhatsApp — 2026-10-04
 - [done] Source /kontak: kendala login/pembayaran/akses, jam balasan dari CMS, tombol wa.me dengan pesan awal, 5 FAQ. Nomor bawaan 6288806001355; tidak ada pengiriman otomatis.
 - [done] Bantuan di footer landing, Pengaturan aplikasi, checkout dan riwayat pembelian. Pesan konteks hanya order_number/product_name; email, nominal, bukti dan transaksi tidak ditambahkan. Link eksternal no-referrer/noopener; klik dan kirim dilakukan pengguna.

@@ -8,7 +8,7 @@ test('WhatsApp phone validation accepts Indonesia E164 digits only',()=>{
 });
 test('WhatsApp link safely encodes initial message and includes only order id/product',()=>{
  const config={...defaultSupport,message:'Halo & bantuan?\nTerima kasih'};
- const url=new URL(whatsappLink(config,{order_number:'MB-TEST',product_name:'Plus & Pro'}));assert.equal(url.origin,'https://wa.me');assert.equal(url.pathname,'/6288806001355');assert.equal(url.searchParams.get('text'),'Halo & bantuan?\nTerima kasih\nID pesanan: MB-TEST\nProduk: Plus & Pro');
+ const url=new URL(whatsappLink(config,{order_number:'MB-TEST',product_name:'Plus & Pro'}));assert.equal(url.origin,'https://wa.me');assert.equal(url.pathname,'/6288806001355');assert.equal(url.searchParams.get('text'),'Halo & bantuan?\nTerima kasih untuk pesanan MB-TEST (Plus & Pro).');
  const extra={order_number:'MB-TEST',product_name:'Plus',email:'secret@example.test',total_rupiah:9900};assert.ok(!whatsappLink(config,extra).includes('secret'));assert.ok(!whatsappLink(config,extra).includes('9900'));
  assert.equal(new URL(whatsappLink(defaultSupport)).searchParams.get('text'),defaultSupport.message);
 });

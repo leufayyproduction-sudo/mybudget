@@ -17,7 +17,7 @@ do $$begin
  if not exists(select 1 from pg_constraint where conrelid='public.site_content_published'::regclass and conname='published_support_valid') then alter table public.site_content_published add constraint published_support_valid check(public.valid_site_support(content));end if;
 end $$;
 -- Only fill missing fields; never replace an admin's configured support values or publish a draft.
-update public.site_content_draft set content=content||jsonb_build_object('support',jsonb_build_object('phone','6288806001355','message','Halo My Budget, saya membutuhkan bantuan.','hours','Jam balasan belum ditetapkan.')),revision=revision+1,updated_at=now() where not content ? 'support';
-update public.site_content_published set content=content||jsonb_build_object('support',jsonb_build_object('phone','6288806001355','message','Halo My Budget, saya membutuhkan bantuan.','hours','Jam balasan belum ditetapkan.')) where not content ? 'support';
+update public.site_content_draft set content=content||jsonb_build_object('support',jsonb_build_object('phone','6288806001355','message','Halo My Budget, saya butuh bantuan.','hours','Setiap hari, 08.00-21.00 WIB. Pesan di luar jam itu dibalas paling lambat 1x24 jam')),revision=revision+1,updated_at=now() where not content ? 'support';
+update public.site_content_published set content=content||jsonb_build_object('support',jsonb_build_object('phone','6288806001355','message','Halo My Budget, saya butuh bantuan.','hours','Setiap hari, 08.00-21.00 WIB. Pesan di luar jam itu dibalas paling lambat 1x24 jam')) where not content ? 'support';
 notify pgrst,'reload schema';
 commit;
