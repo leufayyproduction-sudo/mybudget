@@ -1,5 +1,5 @@
 # My Budget
-- Scope aktif: Phase 3 Sesi B; recurring dahulu, lalu insights/reports/tools. RLS/entitlement lolos; tiga item Phase 2 tetap terbuka.
+- Scope aktif: Phase 3 Sesi B insights/reports saja; recurring PASS menurut pengguna; tiga item Phase 2 tetap terbuka.
 - Stack: Next.js App Router, TypeScript, Tailwind, Supabase Auth/Postgres.
 - UI: lucide-react, Recharts, Radix; form react-hook-form + zod.
 - app/: routes; components/: UI; lib/finance/: fungsi murni; supabase/: migration.
@@ -22,3 +22,4 @@
 - Phase 3 A: migration 009; get_effective_plan() tanpa user_id membungkus get_entitlement(), RPC analytics security invoker + auth.uid().
 - node scripts/verify-pro-analytics.mjs; SQL rollback lokal .rls-pro-analytics-test.sql. Jangan mulai AI.
 - Recurring: migration 010, node scripts/verify-recurring.mjs; .rls-recurring-test.sql rollback. Ledger permanen rule/date, lock per owner, catch-up 500.
+- Insights/reports: migration 011, node scripts/verify-advanced-analysis.mjs; .rls-advanced-analysis-test.sql rollback. Pro only; CSV laporan API terpisah dari CSV Phase 2.

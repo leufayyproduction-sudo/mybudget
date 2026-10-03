@@ -3,10 +3,22 @@
 ## Sesi aktif — Advanced insights dan Advanced reports saja
 - Recurring migration 010 terpasang dan uji PASS menurut pengguna; hasil ini user-reported, bukan eksekusi agen. Tidak mengulang slice recurring.
 - [done] Insights lokal: fungsi murni/ambang/prioritas/maksimal 5, abaikan per akun dengan RLS dan Pro gate; migration 011 + SQL rollback. 41/41 tests, TypeScript dan build termasuk lint passed.
-- [todo] Advanced reports periode kustom/tren/drill-down/CSV server. Digital tools dan tiga item Phase 2 tidak dikerjakan sekarang.
+- [done] Advanced reports lokal: tren multi-bulan, periode utama/pembanding kustom, drill-down kategori ke transaksi, CSV laporan server setelah RPC Pro/owner. 44/44 tests, TypeScript/build termasuk lint passed. Digital tools dan tiga item Phase 2 tidak dikerjakan sekarang.
 - Sudah diuji: 41/41 unit tests passed; TypeScript/build/lint passed. Tanpa browser atau API AI.
 - Belum diuji: migration 011/RLS/dismissal Pro live, visual. SQL setiap langkah pengguna memakai role authenticated + JWT sub; setup plan owner-only dan semua rollback.
 - Keputusan insight: perbandingan sampai hari sama, kategori minimum 3 transaksi; selisih Rp20.000 dan 20%; baseline 3 bulan minimal 5 transaksi +50%; outlier Rp50.000 dan 3× median minimal 5 pembanding; hari boros minimal 10 transaksi, total Rp50.000 dan porsi 35%. Maksimal 5, prioritas outlier/kenaikan/perbaikan/hari, abaikan per akun per bulan.
+### Sudah diuji — insights/reports
+- 41/41 tests slice insights, 44/44 akhir reports; typecheck dan production build termasuk lint passed. Finance tests: empty/zero/Rp20.000, ambang/prioritas/abaikan, overlapping/inclusive periods, bulan kosong, kategori, CSV quotes/formula escaping dan periode utama saja untuk detail transaksi.
+- SQL rollback template/local lengkap: Free/Plus/expired denied, Pro succeeds, dismissal retry, write untuk B ditolak, data transaksi dan dismissal A/B tidak bercampur. Seluruh fixture finansial dibuat setelah role authenticated + JWT sub; validasi struktur 6 blok passed. Ini belum hasil SQL live.
+- HTTP localhost tanpa browser: insights GET, dismissal POST, laporan JSON dan CSV anonim ditolak 401; docs/advanced-analysis-http-result.json. Server verifikasi sudah dihentikan. Tautan Paket/pricing menandai fitur baru masih diverifikasi.
+- [done] Build final setelah navigasi/copy diperbarui passed (termasuk TypeScript/lint). Verifier terbaru lint/sintaks passed. Env dan SQL lokal gitignored; tidak ada key/password pada source atau laporan.
+### Belum bisa diuji — insights/reports
+- Migration 011 belum tersedia pada cek live; docs/advanced-analysis-result.json blocked. Pro/expiry/RLS RPC baru dan CSV Pro live menunggu SQL owner. Visual/browser tidak dilakukan sesuai instruksi. Tidak mengklaim fitur sudah live.
+- Empat planner Digital tools, integrasi recurring pada Forecast, dan verifikasi keseluruhan Phase 3 masih terbuka, di luar scope sesi ini. CSV Premium Phase 2, referensi duplikat dan UI admin tetap terbuka.
+### Keputusan — reports
+- Maksimal 731 hari tiap periode dan 50.000 transaksi gabungan; lebih besar ditolak, bukan dipotong. Satu snapshot RPC JSON menghindari batas 1000 baris PostgREST/pagination berubah. Owner auth.uid + RLS, tidak menerima user_id browser. CSV endpoint khusus /api/advanced-reports?format=csv, tidak mengubah CSV Phase 2.
+- Total aktual per periode, bukan saldo/alokasi goal. Bulan parsial terpilih dan kosong ditampilkan; pembanding nol Baru/Tidak ada pembanding. Durasi periode berbeda tidak dinormalisasi, asumsi dijelaskan. Detail transaksi utama saja; CSV juga memuat ringkasan pembanding, tren dan kategori pemilik.
+- Langkah berikutnya: jalankan versi lengkap migration 011 sekali (sesudah 010), lalu .rls-advanced-analysis-test.sql sampai PASS, ulang verifier dan pengujian CSV Pro live. Berhenti setelah commit reports; tidak memulai planner atau AI.
 
 ## Phase 3 Sesi B — recurring dikerjakan lebih dahulu
 - [done] Implementasi lokal recurring: migration 010, RPC Plus/Pro, ledger unik, lock pengguna, catch-up 500/panggilan, CRUD/jeda/lanjut, asal transaksi dari ledger. Tidak mengubah trigger kuota lama.

@@ -1,0 +1,25 @@
+{
+  "scope": "unauthenticated HTTP only",
+  "checks": [
+    {
+      "status": 401,
+      "passed": true,
+      "name": "insights GET"
+    },
+    {
+      "status": 401,
+      "passed": true,
+      "name": "dismiss POST"
+    },
+    {
+      "status": 401,
+      "passed": true,
+      "name": "reports JSON"
+    },
+    {
+      "status": 401,
+      "passed": true,
+      "name": "reports CSV"
+    }
+  ]
+}

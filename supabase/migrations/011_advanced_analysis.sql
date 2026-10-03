@@ -23,4 +23,19 @@ begin
 end $$;
 revoke all on function public.get_advanced_insight_data(),public.dismiss_insight(text) from public,anon;
 grant execute on function public.get_advanced_insight_data(),public.dismiss_insight(text) to authenticated;
+create function public.get_advanced_report_data(p_from date,p_to date,p_compare_from date,p_compare_to date) returns jsonb language plpgsql stable security invoker set search_path='' as $$
+declare result jsonb;
+begin
+ if auth.uid() is null or public.get_effective_plan() is distinct from 'pro' then raise exception 'Pro aktif diperlukan' using errcode='42501';end if;
+ if p_from is null or p_to is null or p_compare_from is null or p_compare_to is null
+ or p_from>p_to or p_compare_from>p_compare_to or p_to-p_from>730 or p_compare_to-p_compare_from>730
+ or p_from<date '2000-01-01' or p_compare_from<date '2000-01-01'
+ or greatest(p_to,p_compare_to)>(now() at time zone 'Asia/Jakarta')::date then raise exception 'Periode tidak valid (maksimum 731 hari)' using errcode='22023';end if;
+ if (select count(*) from public.transactions where user_id=auth.uid() and ((data->>'date')::date between p_from and p_to or (data->>'date')::date between p_compare_from and p_compare_to))>50000 then raise exception 'Perpendek periode: maksimum 50000 transaksi per laporan' using errcode='22023';end if;
+ select coalesce(jsonb_agg(data||jsonb_build_object('id',id)),'[]'::jsonb) into result from public.transactions
+ where user_id=auth.uid() and ((data->>'date')::date between p_from and p_to or (data->>'date')::date between p_compare_from and p_compare_to);
+ return result;
+end $$;
+revoke all on function public.get_advanced_report_data(date,date,date,date) from public,anon;
+grant execute on function public.get_advanced_report_data(date,date,date,date) to authenticated;
 commit;
