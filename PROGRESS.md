@@ -1,13 +1,25 @@
 # Progress My Budget
 
 ## Phase 3 Sesi A — izin terbaru pengguna
-- [doing] Financial health; [todo] Forecast; [todo] Goal projection. Sesi B dan AI tidak dikerjakan.
+- [done] Implementasi lokal Financial health, Forecast, Goal projection. Verifikasi live migration 009 masih terbuka. Sesi B dan AI tidak dikerjakan.
 - Pengecualian gate eksplisit: RLS dan entitlement sudah lolos; tiga item Phase 2 tidak menghalangi Sesi A.
 - Masih terbuka (tidak dikerjakan sekarang): CSV Premium positif, deteksi referensi duplikat, UI admin.
 - Tanpa browser/screenshot; migration baru tetap perlu diterapkan sebelum verifikasi live fitur baru.
 - [done] Slice Financial health: rumus murni, minimum 2 bulan penuh + budget/pemasukan/pengeluaran; UI asumsi, RPC Pro security invoker + owner filter. 29/29 tests, TypeScript dan build termasuk lint passed. Test awal sandbox ENOMEM; eksekusi ulang di luar sandbox passed.
 - Belum diuji: migration 009/live Pro dan expiry baru; bukan klaim fitur live. Bobot freelance 30/30/25/15, tetap 40/30/30; referensi surplus 20%, cadangan 3 bulan.
 - [done] Slice Forecast: 30/60/90 hari, rentang kuartil/median, tanggal negatif, tabel alternatif grafik. 32/32 tests, TypeScript/build/lint passed. Minimum 3 bulan penuh, maksimal 6; budget dan historis kategori memakai max agar tidak dihitung ganda. Recurring tidak dibuat/diasumsikan tersedia.
+- [done] Goal projection: simulasi sementara, konfirmasi RPC Pro/owner, alokasi bersaing, nol/tercapai, akhir bulan. 35/35 tests passed; TypeScript/lint passed dan build final setelah tautan Paket/pricing diperbarui passed. Syntax/lint verifier passed, file env dan SQL fixture terkonfirmasi gitignored.
+### Sudah diuji — Phase 3 Sesi A
+- Unit finance: health kosong/minim/tidak stabil; forecast tiga skenario, nol, Rp20.000, negatif, budget tanpa duplikasi; projection nol/tercapai/bersaing/akhir bulan. Tidak ada perubahan saldo/transaksi dari simulasi.
+- TypeScript, lint dan build lokal tiga slice; syntax verifier valid. Test penuh sekali pada akhir masing-masing slice (29/32/35 tests).
+### Belum bisa diuji — Phase 3 Sesi A
+- Verifier live: blocked, migration 009 belum tersedia (docs/pro-analytics-result.json). Tidak mengklaim RPC Pro/Plus/expiry/isolation baru sudah lolos live. SQL rollback siap di .rls-pro-analytics-test.sql, tanpa key/password.
+- UI 375/768/1280 dan interaksi browser tidak diuji sesuai mode hemat. Tidak deploy, tidak ada pembayaran/QRIS nyata. Tiga item Phase 2 tetap terbuka seperti dicatat di atas.
+### Keputusan — Phase 3 Sesi A
+- Resolver Pro mengacu entitlement lama yang sudah teruji; RPC security invoker, owner filter, tidak menerima user_id. Hasil tidak disimpan pada tabel atau URL publik. UI recheck fokus/60 detik; konfirmasi selalu memeriksa server.
+- Goal patokan median surplus 2–6 bulan, pembagian proporsional saat bersaing; tanggal hanya sampai 100 tahun, tanpa bunga atau jaminan. Simulasi tidak menyimpan sebelum konfirmasi, tidak menjadi transaksi.
+- Pricing/Premium menandai implementasi lokal menunggu verifikasi live, bukan tersedia live. Recurring/insights/advanced reports/tools tetap Segera hadir.
+- Langkah berikutnya: jalankan migration 009 lalu SQL rollback lokal sampai PASS, ulang verifier. Berhenti setelah Sesi A; jangan mulai Sesi B atau AI.
 
 ## Sesi aktif — Phase 2 Sesi B, admin/pengaturan/CMS
 - Pengguna meminta verifikasi live Sesi B setelah migration 006–008 dan bootstrap selesai. Tanpa browser/screenshot, output dibatasi; Phase 3 tidak dimulai.

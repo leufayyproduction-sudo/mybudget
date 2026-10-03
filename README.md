@@ -135,6 +135,18 @@ Verifikasi:
 
 Build dapat memakai folder terpisah agar tidak bentrok dengan dev: di PowerShell jalankan `$env:MYBUDGET_BUILD_DIR='.next-verify'; npm run build`. Jalankan `Remove-Item Env:MYBUDGET_BUILD_DIR` sebelum kembali memakai perintah run standar. Folder verifikasi diabaikan git; tidak memakai fitur khusus hosting.
 
+## Phase 3 Sesi A — Financial health, Forecast, Goal projection
+
+Source lokal tersedia pada `/features/health`, `/features/forecast`, `/features/projection`. Jalankan `supabase/migrations/009_pro_analytics.sql` **setelah 001–008** melalui SQL Editor. Tidak ada deployment atau pembayaran nyata. `get_effective_plan()` membungkus resolver `get_entitlement()` yang sudah teruji, tanpa argumen user; active Pro/Early Access Pro saja. RPC security invoker menggunakan RLS dan auth.uid(), API tidak menerima user_id dan tidak menyimpan hasil analitik publik. Free/Plus/expiry ditolak; simulasi alokasi disimpan hanya setelah konfirmasi, lewat RPC owner-only. UI memeriksa akses saat fokus dan setiap 60 detik; request server selalu memeriksa ulang.
+
+Sudah diuji: unit test deterministik health/forecast/projection (nol, data minim, bulan kosong, pemasukan tak stabil, Rp20.000, target tercapai, alokasi bersaing, akhir bulan), lint/TypeScript/build lokal. Belum diuji: migration 009 pada Supabase live, Pro/expiry/isolation RPC baru, UI 375/768/1280 (tanpa browser sesuai instruksi). Jangan mengartikan implementasi lokal sebagai fitur live terverifikasi. Tiga item Phase 2 tetap terbuka: CSV Premium positif, deteksi referensi duplikat, UI admin.
+
+Keputusan rumus: maksimal 6 bulan kalender selesai, mulai bulan transaksi pertama; bulan kosong termasuk nol, bulan berjalan tidak digunakan sebagai patokan. Ini mengasumsikan pencatatan bulan pertama sudah lengkap. Health minimum 2 bulan + pemasukan/pengeluaran nonzero dan budget periode tersebut. Bobot tabungan/budget/cadangan/stabilitas: freelance/campuran 30/30/25/15, tetap 40/30/30. Surplus/pemasukan 20% mendapat skor tabungan penuh; budget: rata-rata 100 minus persentase kelebihan, dibatasi 0–100; saldo menutup 3 bulan pengeluaran mendapat skor cadangan penuh; stabilitas = 100 × (1 − koefisien variasi), dibatasi 0–100. Saldo hanyalah proksi cadangan, bukan bukti dana darurat terpisah.
+
+Forecast minimum 3 bulan: kuartil 25/50/75 pemasukan, pengeluaran per kategori = max(rata-rata aktual, budget bulan ini), termasuk budget wajib. Semua pola memakai sebaran aktual, bukan perkiraan onboarding. Rentang 30/60/90 hari memakai laju merata per 30 hari; tidak memperkirakan tanggal invoice/gajian. Aturan recurring belum dibuat sehingga jadwalnya belum dimasukkan. Goal minimum 2 bulan untuk patokan median surplus; alokasi bersaing dibagi proporsional dan dibulatkan turun. Alokasi nol/tercapai ditangani langsung; proyeksi lebih dari 100 tahun tidak menampilkan tanggal. Goal tidak mengurangi saldo dua kali atau otomatis menjadi transaksi. Tidak ada API AI atau nasihat investasi.
+
+Verifikasi live: `node scripts/verify-pro-analytics.mjs` menghasilkan `.rls-pro-analytics-test.sql` gitignored dari dua akun lokal, tanpa key/password dalam SQL. Jalankan SQL tersebut seluruhnya di SQL Editor: Free, Plus, expiry, Pro, isolasi A/B dan konfirmasi alokasi; semuanya rollback. Jika error, jalankan `ROLLBACK;`. Akun khusus pengujian wajib, role admin tidak diubah. Hasil live ditulis `docs/pro-analytics-result.json`; assertions owner tetap perlu hasil PASS dari SQL Editor. Sesi B/recurring/tools tidak dikerjakan.
+
 ## Logo dan ulasan pengguna
 
 ### Perbaikan view public_reviews

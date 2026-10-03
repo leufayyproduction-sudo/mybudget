@@ -3,6 +3,7 @@
 begin;
 create function pg_temp.assert_true(ok boolean,label text) returns void language plpgsql as $$begin if ok is distinct from true then raise exception 'FAIL: %',label; end if; end$$;
 create function pg_temp.denied(query text) returns boolean language plpgsql as $$begin execute query; return false; exception when insufficient_privilege then return true; end$$;
+select pg_temp.assert_true('__USER_A__'<>'__USER_B__','two different dedicated accounts');
 -- Rollback-only cleanup of premium grants, limited to these test accounts.
 delete from public.entitlements where user_id in ('__USER_A__'::uuid,'__USER_B__'::uuid);
 insert into public.subscriptions(user_id,plan,status,expires_at) values
@@ -12,6 +13,10 @@ select set_config('request.jwt.claims','{"sub":"__USER_A__","role":"authenticate
 set local role authenticated;
 select pg_temp.assert_true(pg_temp.denied('select public.get_pro_analytics()'),'Free analytics denied');
 select pg_temp.assert_true(pg_temp.denied('select public.set_projected_allocation(''00000000-0000-0000-0000-000000000009'',20000)'),'Free projection write denied');
+reset role;
+update public.subscriptions set plan='plus',expires_at=now()+interval '1 day' where user_id='__USER_A__';
+set local role authenticated;
+select pg_temp.assert_true(pg_temp.denied('select public.get_pro_analytics()'),'Plus analytics denied');
 reset role;
 update public.subscriptions set plan='pro',expires_at=now()-interval '1 day' where user_id='__USER_A__';
 set local role authenticated;

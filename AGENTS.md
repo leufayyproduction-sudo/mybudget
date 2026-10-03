@@ -1,5 +1,5 @@
 # My Budget
-- Scope aktif: Phase 2 Sesi B admin/pengaturan/CMS; Phase 1 RLS dan Sesi A lolos.
+- Scope aktif: Phase 3 Sesi A saja; RLS/entitlement lolos, pengecualian tiga item Phase 2 eksplisit pengguna.
 - Stack: Next.js App Router, TypeScript, Tailwind, Supabase Auth/Postgres.
 - UI: lucide-react, Recharts, Radix; form react-hook-form + zod.
 - app/: routes; components/: UI; lib/finance/: fungsi murni; supabase/: migration.
@@ -19,3 +19,5 @@
 - Scope terbaru: Phase 2 diminta keseluruhan; sesi ini Sesi A checkout/pesanan, Sesi B admin/QRIS/CMS terpisah.
 - plans adalah sumber kuota; get_entitlement() sumber hak akses; get_report_transactions(month) wajib untuk Reports.
 - npm run lint / npm run verify:entitlements; tes Premium/kuota rollback di supabase/tests/plans_entitlements.sql.
+- Phase 3 A: migration 009; get_effective_plan() tanpa user_id membungkus get_entitlement(), RPC analytics security invoker + auth.uid().
+- node scripts/verify-pro-analytics.mjs; SQL rollback lokal .rls-pro-analytics-test.sql. Jangan mulai Sesi B/AI.

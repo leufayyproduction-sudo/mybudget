@@ -1,0 +1,8 @@
+{
+  "status": "blocked",
+  "checked_at": "2026-10-03T10:22:56.556Z",
+  "checks": [],
+  "owner_sql": "pending",
+  "mutation": "none",
+  "reason": "Migration 009 belum tersedia; SQL uji lokal sudah disiapkan."
+}
