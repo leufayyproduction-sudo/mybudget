@@ -1,5 +1,26 @@
 # Progress My Budget
 
+## Penutupan verifikasi rilis — 2026-10-03
+- [done] Tes lokal ekspor Premium (handler server dipisahkan agar gate fail-closed dapat diuji), audit source/history, dan pengujian HTTP admin/CSV.
+- [doing] Penutupan live Phase 2: bukan status siap rilis. Premium positif/expiry/isolation dan fixture duplicate positif-negatif menunggu SQL pemilik. Status bagian ini mengungguli catatan lama.
+### Sudah diuji
+- 54/54 unit tests passed, lint/TypeScript/build production passed. Tes handler: Free/resolver expired-as-Free/null ditolak sebelum baca data, kegagalan resolver ditolak, Plus/Pro CSV Rp20.000/formula escaping, error database tidak mengirim partial CSV. Expiry unit test memakai mock hasil resolver, bukan clock database.
+- 36 checks Supabase/HTTP localhost passed: anonim/invalid JWT CSV ditolak; kedua akun Free CSV 403/no-store; non-admin enam endpoint admin baca/session/upload dan tiga endpoint mutation ditolak; empat halaman admin menolak non-admin 403; admin membuka keempat halaman 200. Cookie palsu/tanpa cookie redirect login; RPC non-admin 42501. Satu row pesanan admin memiliki flag duplikat boolean (bukan fixture duplikat positif). docs/release-phase2-result.json; server sementara dihentikan.
+- Audit pola secret: 307 blob reachable history Git + tracked worktree, nol temuan literal secret/service-role JWT/private-key/pola credential. Tidak menampilkan isi secret. Bukan jaminan semua format credential atau reflog/backup sudah diperiksa.
+- Semua tabel pada source migrations memiliki enable RLS; 15 route handler memakai verified-user/admin helper. RPC data pribadi memiliki auth.uid/RLS atau role/entitlement; fungsi publik ulasan sengaja proyeksi/agregat, helper validasi murni dan fungsi trigger tidak memerlukan hak pengguna. Tidak ada server action use-server ditemukan pada app.
+- Source storage: payment-proofs/digital-files private; signed URL proof/download 60 detik, download setelah paid; public URL terbatas merchant-qris/site-assets. Tidak ada perubahan fitur/admin-role/payment pada live test ini.
+### Belum bisa diuji
+- Jalankan .rls-release-phase2-test.sql seluruhnya di SQL Editor hingga PASS: Plus aktif/expiry/isolation owner query, deteksi referensi case/whitespace duplicate versus unik, admin finance isolation, seluruh tabel public RLS dan flags bucket private. BEGIN/ROLLBACK; role authenticated + JWT pada langkah pengguna. Jika error jalankan ROLLBACK. File lokal gitignored, tidak ada key/password; template supabase/tests/release_phase2.sql.
+- HTTP Premium positif + expired memerlukan fixture plan yang terlihat oleh server; kedua akun saat cek Free. Mock unit test tidak menggantikan tes live tersebut. Owner SQL rollback tidak dapat dilihat HTTP transaksi terpisah.
+- Audit live katalog RLS, grants/policy/RPC yang dibuat di luar migrations dan file privat nyata belum diulang; pemeriksaan private-file byte pada sesi terdahulu sudah passed, bukan verifikasi terbaru. Phase 3 012–013/SQL/parallel masih membutuhkan hasil PASS; perbaikan sintaks 012 belum dianggap lolos SQL live.
+- Visual 375/768/1280 tidak diuji sesuai instruksi; tanpa deploy/QRIS/pembayaran nyata/API AI.
+### Keputusan diambil
+- Mempertahankan source kebenaran get_entitlement() dan owner RLS ekspor; browser user_id diabaikan. Refactor helper server saja, kegagalan resolver/null fail-closed, route memakai no-store untuk sukses/error. Tidak ada bypass premium.
+- Deteksi duplikat yang sudah ada tetap lower(btrim(reference)), di seluruh pesanan lain, bukan sekadar halaman filter; hanya admin menerima flag. Tidak menambah deteksi pembayaran otomatis atau persetujuan.
+- Audit tidak mereset role/paket/data pengguna live. Fixture plan/order/reference dibuat hanya oleh pemilik dalam SQL rollback, tanpa pembayaran. Temuan pola/source nol tidak berarti audit DB live lengkap.
+- Masih ada batas fungsi yang perlu ditinjau sebelum rilis tools: admin_save_product migration 007 meminta file pendukung untuk aktivasi digital_tool, walau checkout interactive 012 mengizinkan file opsional. Tidak diubah dalam audit keamanan ini.
+- Langkah berikutnya: SQL rollback PASS dan tes HTTP Premium/expired dengan fixture terkontrol, lalu verifikasi Phase 3 yang tertunda; jangan mengklaim rilis/live sudah aman sepenuhnya.
+
 ## Hasil terbaru — tools/Forecast (2026-10-03)
 - [done] Empat planner, paid-product server gate, simpan input owner-RLS, ekspor server; commit 4f87536. Forecast recurring income/expense dan residual tanpa duplikasi; commit 5757042. Navigasi /tools tersambung.
 - [doing] Verifikasi live keseluruhan: migration 012–013 belum tersedia. Bagian ini mengungguli status historis di bawah; bukan klaim Phase 3 lengkap/live.

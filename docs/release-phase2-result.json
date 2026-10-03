@@ -1,0 +1,157 @@
+{
+  "checked_at": "2026-10-03T13:10:05.300Z",
+  "status": "passed_selected_checks_owner_sql_pending",
+  "checks": [
+    {
+      "name": "anonymous CSV denied",
+      "passed": true
+    },
+    {
+      "name": "invalid JWT CSV denied",
+      "passed": true
+    },
+    {
+      "name": "admin without cookie redirects",
+      "passed": true
+    },
+    {
+      "name": "forged admin cookie redirects",
+      "passed": true
+    },
+    {
+      "name": "anonymous admin purchases",
+      "passed": true
+    },
+    {
+      "name": "anonymous admin settings",
+      "passed": true
+    },
+    {
+      "name": "anonymous admin content",
+      "passed": true
+    },
+    {
+      "name": "anonymous admin proof",
+      "passed": true
+    },
+    {
+      "name": "anonymous admin assets",
+      "passed": true
+    },
+    {
+      "name": "anonymous admin session",
+      "passed": true
+    },
+    {
+      "name": "A actual CSV gate",
+      "passed": true
+    },
+    {
+      "name": "A CSV no-store",
+      "passed": true
+    },
+    {
+      "name": "non-admin purchases",
+      "passed": true
+    },
+    {
+      "name": "non-admin settings",
+      "passed": true
+    },
+    {
+      "name": "non-admin content",
+      "passed": true
+    },
+    {
+      "name": "non-admin proof",
+      "passed": true
+    },
+    {
+      "name": "non-admin assets",
+      "passed": true
+    },
+    {
+      "name": "non-admin session",
+      "passed": true
+    },
+    {
+      "name": "non-admin write purchases",
+      "passed": true
+    },
+    {
+      "name": "non-admin write settings",
+      "passed": true
+    },
+    {
+      "name": "non-admin write content",
+      "passed": true
+    },
+    {
+      "name": "non-admin page /admin",
+      "passed": true
+    },
+    {
+      "name": "non-admin page /admin/settings",
+      "passed": true
+    },
+    {
+      "name": "non-admin page /admin/content",
+      "passed": true
+    },
+    {
+      "name": "non-admin page /admin/content/preview",
+      "passed": true
+    },
+    {
+      "name": "non-admin RPC admin_purchase_summary",
+      "passed": true
+    },
+    {
+      "name": "non-admin RPC admin_list_orders",
+      "passed": true
+    },
+    {
+      "name": "B actual CSV gate",
+      "passed": true
+    },
+    {
+      "name": "B CSV no-store",
+      "passed": true
+    },
+    {
+      "name": "admin list permitted",
+      "passed": true
+    },
+    {
+      "name": "duplicate flag boolean schema",
+      "passed": true
+    },
+    {
+      "name": "admin page /admin",
+      "passed": true
+    },
+    {
+      "name": "admin page /admin/settings",
+      "passed": true
+    },
+    {
+      "name": "admin page /admin/content",
+      "passed": true
+    },
+    {
+      "name": "admin page /admin/content/preview",
+      "passed": true
+    },
+    {
+      "name": "distinct test users",
+      "passed": true
+    }
+  ],
+  "pending": [
+    "Premium positive and expiry HTTP require test plan fixture",
+    "duplicate positive/negative SQL fixture",
+    "live RLS catalog/private bucket flags",
+    "visual not run"
+  ],
+  "duplicate_rows_checked": 1
+}

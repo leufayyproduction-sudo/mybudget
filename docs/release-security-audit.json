@@ -1,0 +1,392 @@
+{
+  "checked_at": "2026-10-03T13:11:44.667Z",
+  "scope": "tracked and non-ignored untracked worktree, all reachable git blobs; migration source, not live database",
+  "secret_findings": [],
+  "tables_without_rls": [],
+  "routes": [
+    {
+      "path": "app/api/admin/assets/route.ts",
+      "verified_client": true,
+      "admin": true
+    },
+    {
+      "path": "app/api/admin/content/route.ts",
+      "verified_client": true,
+      "admin": true
+    },
+    {
+      "path": "app/api/admin/proof/route.ts",
+      "verified_client": true,
+      "admin": true
+    },
+    {
+      "path": "app/api/admin/purchases/route.ts",
+      "verified_client": true,
+      "admin": true
+    },
+    {
+      "path": "app/api/admin/session/route.ts",
+      "verified_client": true,
+      "admin": true
+    },
+    {
+      "path": "app/api/admin/settings/route.ts",
+      "verified_client": true,
+      "admin": true
+    },
+    {
+      "path": "app/api/advanced-insights/route.ts",
+      "verified_client": true,
+      "admin": false
+    },
+    {
+      "path": "app/api/advanced-reports/route.ts",
+      "verified_client": true,
+      "admin": false
+    },
+    {
+      "path": "app/api/analytics/route.ts",
+      "verified_client": true,
+      "admin": false
+    },
+    {
+      "path": "app/api/downloads/[id]/route.ts",
+      "verified_client": true,
+      "admin": false
+    },
+    {
+      "path": "app/api/exports/transactions/route.ts",
+      "verified_client": true,
+      "admin": false
+    },
+    {
+      "path": "app/api/orders/route.ts",
+      "verified_client": true,
+      "admin": false
+    },
+    {
+      "path": "app/api/orders/[id]/confirmation/route.ts",
+      "verified_client": true,
+      "admin": false
+    },
+    {
+      "path": "app/api/recurring/route.ts",
+      "verified_client": true,
+      "admin": false
+    },
+    {
+      "path": "app/api/tools/[tool]/route.ts",
+      "verified_client": true,
+      "admin": false
+    }
+  ],
+  "rpc_review": [
+    {
+      "name": "reject_null_finance_fields",
+      "admin_guard": false,
+      "owner_guard": false,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "review_timestamps",
+      "admin_guard": false,
+      "owner_guard": false,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "review_summary",
+      "admin_guard": false,
+      "owner_guard": false,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "list_public_reviews",
+      "admin_guard": false,
+      "owner_guard": false,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "initialize_free_subscription",
+      "admin_guard": false,
+      "owner_guard": false,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "get_entitlement",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "enforce_plan_limits",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "get_report_transactions",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "is_admin",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "get_entitlement",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "create_order",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "list_my_orders",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "submit_payment_confirmation",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "admin_review_order",
+      "admin_guard": true,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "admin_purchase_summary",
+      "admin_guard": true,
+      "owner_guard": false,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "admin_list_orders",
+      "admin_guard": true,
+      "owner_guard": false,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "admin_save_product",
+      "admin_guard": true,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "admin_save_payment_settings",
+      "admin_guard": true,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "admin_record_asset",
+      "admin_guard": true,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "get_paid_download",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "can_read_paid_file",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "create_order",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "valid_site_destination",
+      "admin_guard": false,
+      "owner_guard": false,
+      "entitlement_guard": false,
+      "pure_helper": true
+    },
+    {
+      "name": "valid_site_content",
+      "admin_guard": false,
+      "owner_guard": false,
+      "entitlement_guard": false,
+      "pure_helper": true
+    },
+    {
+      "name": "admin_save_site_draft",
+      "admin_guard": true,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "admin_publish_site",
+      "admin_guard": true,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "get_effective_plan",
+      "admin_guard": false,
+      "owner_guard": false,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "get_pro_analytics",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "set_projected_allocation",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "recurring_next",
+      "admin_guard": false,
+      "owner_guard": false,
+      "entitlement_guard": false,
+      "pure_helper": true
+    },
+    {
+      "name": "save_recurring",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "delete_recurring",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "apply_recurring",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "get_advanced_insight_data",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "dismiss_insight",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "get_advanced_report_data",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "can_use_tool",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "valid_planner_input",
+      "admin_guard": false,
+      "owner_guard": false,
+      "entitlement_guard": false,
+      "pure_helper": true
+    },
+    {
+      "name": "get_tool_data",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "save_tool_result",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    },
+    {
+      "name": "create_order",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": false,
+      "pure_helper": false
+    },
+    {
+      "name": "get_forecast_analytics",
+      "admin_guard": false,
+      "owner_guard": true,
+      "entitlement_guard": true,
+      "pure_helper": false
+    }
+  ],
+  "actions": [],
+  "private_buckets": [
+    {
+      "name": "payment-proofs",
+      "declared_private": true
+    },
+    {
+      "name": "digital-files",
+      "declared_private": true
+    }
+  ],
+  "history_blobs": 307,
+  "status": "passed_static_checks_live_catalog_pending"
+}
