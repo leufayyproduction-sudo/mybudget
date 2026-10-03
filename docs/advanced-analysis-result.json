@@ -1,0 +1,9 @@
+{
+  "status": "blocked",
+  "checked_at": "2026-10-03T11:29:14.698Z",
+  "checks": [],
+  "owner_sql": "pending",
+  "http_paid_access": "pending",
+  "mutation": "none",
+  "reason": "Migration 011 belum tersedia; SQL rollback lokal sudah disiapkan."
+}

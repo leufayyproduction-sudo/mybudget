@@ -1,5 +1,13 @@
 # Progress My Budget
 
+## Sesi aktif — Advanced insights dan Advanced reports saja
+- Recurring migration 010 terpasang dan uji PASS menurut pengguna; hasil ini user-reported, bukan eksekusi agen. Tidak mengulang slice recurring.
+- [done] Insights lokal: fungsi murni/ambang/prioritas/maksimal 5, abaikan per akun dengan RLS dan Pro gate; migration 011 + SQL rollback. 41/41 tests, TypeScript dan build termasuk lint passed.
+- [todo] Advanced reports periode kustom/tren/drill-down/CSV server. Digital tools dan tiga item Phase 2 tidak dikerjakan sekarang.
+- Sudah diuji: 41/41 unit tests passed; TypeScript/build/lint passed. Tanpa browser atau API AI.
+- Belum diuji: migration 011/RLS/dismissal Pro live, visual. SQL setiap langkah pengguna memakai role authenticated + JWT sub; setup plan owner-only dan semua rollback.
+- Keputusan insight: perbandingan sampai hari sama, kategori minimum 3 transaksi; selisih Rp20.000 dan 20%; baseline 3 bulan minimal 5 transaksi +50%; outlier Rp50.000 dan 3× median minimal 5 pembanding; hari boros minimal 10 transaksi, total Rp50.000 dan porsi 35%. Maksimal 5, prioritas outlier/kenaikan/perbaikan/hari, abaikan per akun per bulan.
+
 ## Phase 3 Sesi B — recurring dikerjakan lebih dahulu
 - [done] Implementasi lokal recurring: migration 010, RPC Plus/Pro, ledger unik, lock pengguna, catch-up 500/panggilan, CRUD/jeda/lanjut, asal transaksi dari ledger. Tidak mengubah trigger kuota lama.
 - [todo] Advanced insights → Advanced reports/CSV laporan → empat Digital tools → verifikasi live lengkap. Sesi A migration 009 terpasang menurut pengguna; hasil assertions akhir belum dilaporkan.
