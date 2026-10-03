@@ -4,36 +4,59 @@ insert into public.products(code,name,type,price_rupiah,active,description) valu
  ('savings-planner','Savings planner','digital_tool',9900,false,'Planner tabungan interaktif.'),
  ('freelancer-planner','Freelancer finance planner','digital_tool',14900,false,'Perencanaan pemasukan project dan cadangan, bukan jaminan.'),
  ('goal-planner','Goal planner','digital_tool',9900,false,'Simulasi target dan alokasi.') on conflict(code) do nothing;
-create table public.digital_tool_products(tool_code text primary key check(tool_code in ('budget','savings','freelancer','goal')),product_id uuid unique not null references public.products(id));
-insert into public.digital_tool_products select v.tool,p.id from (values('budget','budget-planner'),('savings','savings-planner'),('freelancer','freelancer-planner'),('goal','goal-planner')) v(tool,code) join public.products p on p.code=v.code and p.type='digital_tool';
+create table if not exists public.digital_tool_products(tool_code text primary key check(tool_code in ('budget','savings','freelancer','goal')),product_id uuid unique not null references public.products(id));
+insert into public.digital_tool_products select v.tool,p.id from (values('budget','budget-planner'),('savings','savings-planner'),('freelancer','freelancer-planner'),('goal','goal-planner')) v(tool,code) join public.products p on p.code=v.code and p.type='digital_tool' on conflict do nothing;
 alter table public.digital_tool_products enable row level security;
 revoke all on public.digital_tool_products from public,anon,authenticated;
 grant select on public.digital_tool_products to anon,authenticated;
+drop policy if exists public_tool_mapping on public.digital_tool_products;
 create policy public_tool_mapping on public.digital_tool_products for select using(true);
-create function public.can_use_tool(p_tool text) returns boolean language sql stable security definer set search_path='' as $$
+create or replace function public.can_use_tool(p_tool text) returns boolean language sql stable security definer set search_path='' as $$
  select auth.uid() is not null and exists(select 1 from public.digital_tool_products m join public.orders o on o.product_id=m.product_id where m.tool_code=p_tool and o.user_id=auth.uid() and o.status='paid' and o.product_type='digital_tool')
 $$;
-create function public.valid_planner_input(p_tool text,p_input jsonb) returns boolean language plpgsql immutable set search_path='' as $$
-declare keys text[];k text;n numeric;
+create or replace function public.valid_planner_input(p_tool text,p_input jsonb) returns boolean language plpgsql immutable set search_path='' as $$
+declare
+ keys text[];
+ k text;
+ n numeric;
+ minimum_value numeric;
+ maximum_value numeric;
 begin
  keys:=case p_tool when 'budget' then array['income','essential','wants','saving'] when 'savings' then array['target','saved','monthly','months'] when 'goal' then array['target','saved','monthly','months'] when 'freelancer' then array['projectIncome','projects','essential','reserveMonths','reserveMonthly'] else null end;
  if keys is null or p_input is null or jsonb_typeof(p_input)<>'object' or not p_input ?& keys or (select count(*) from jsonb_object_keys(p_input))<>cardinality(keys) then return false;end if;
  foreach k in array keys loop
   if jsonb_typeof(p_input->k)<>'number' then return false;end if;n:=(p_input->>k)::numeric;
-  if n<>trunc(n) or n<case when k in ('months','reserveMonths') then 1 else 0 end or n>case k when 'months' then 1200 when 'reserveMonths' then 24 when 'projects' then 1000 else 1000000000000 end then return false;end if;
+  minimum_value := 0;
+  maximum_value := 1000000000000;
+  if k = 'months' then
+   minimum_value := 1;
+   maximum_value := 1200;
+  elsif k = 'reserveMonths' then
+   minimum_value := 1;
+   maximum_value := 24;
+  elsif k = 'projects' then
+   maximum_value := 1000;
+  end if;
+  if n <> trunc(n) then
+   return false;
+  end if;
+  if n < minimum_value or n > maximum_value then
+   return false;
+  end if;
  end loop;return true;
 end $$;
-create table public.planner_results(id uuid primary key default gen_random_uuid(),user_id uuid not null references auth.users(id) on delete cascade,tool_code text not null references public.digital_tool_products(tool_code),title text not null check(length(title) between 1 and 80),inputs jsonb not null,created_at timestamptz not null default now(),check(public.valid_planner_input(tool_code,inputs)));
+create table if not exists public.planner_results(id uuid primary key default gen_random_uuid(),user_id uuid not null references auth.users(id) on delete cascade,tool_code text not null references public.digital_tool_products(tool_code),title text not null check(length(title) between 1 and 80),inputs jsonb not null,created_at timestamptz not null default now(),check(public.valid_planner_input(tool_code,inputs)));
 alter table public.planner_results enable row level security;
 revoke all on public.planner_results from public,anon,authenticated;
 grant select,insert,delete on public.planner_results to authenticated;
+drop policy if exists own_paid_planner on public.planner_results;
 create policy own_paid_planner on public.planner_results for all to authenticated using(user_id=auth.uid() and public.can_use_tool(tool_code)) with check(user_id=auth.uid() and public.can_use_tool(tool_code));
-create function public.get_tool_data(p_tool text) returns jsonb language plpgsql stable security invoker set search_path='' as $$
+create or replace function public.get_tool_data(p_tool text) returns jsonb language plpgsql stable security invoker set search_path='' as $$
 begin
  if not public.can_use_tool(p_tool) then raise exception 'Pesanan paid diperlukan' using errcode='42501';end if;
  return jsonb_build_object('saved',coalesce((select jsonb_agg(to_jsonb(r) order by created_at desc) from public.planner_results r where user_id=auth.uid() and tool_code=p_tool),'[]'::jsonb));
 end $$;
-create function public.save_tool_result(p_tool text,p_title text,p_inputs jsonb) returns uuid language plpgsql security invoker set search_path='' as $$
+create or replace function public.save_tool_result(p_tool text,p_title text,p_inputs jsonb) returns uuid language plpgsql security invoker set search_path='' as $$
 declare saved uuid;
 begin
  if not public.can_use_tool(p_tool) then raise exception 'Pesanan paid diperlukan' using errcode='42501';end if;
