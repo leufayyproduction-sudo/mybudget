@@ -1,0 +1,21 @@
+import {z} from 'zod';
+export const toolKinds=['budget','savings','freelancer','goal'] as const;export type ToolKind=typeof toolKinds[number];
+export const plannerFields:Record<ToolKind,{key:string;label:string;max:number}[]>={
+ budget:[{key:'income',label:'Pemasukan rencana (Rp)',max:1e12},{key:'essential',label:'Kebutuhan wajib (Rp)',max:1e12},{key:'wants',label:'Pengeluaran pilihan (Rp)',max:1e12},{key:'saving',label:'Alokasi tabungan (Rp)',max:1e12}],
+ savings:[{key:'target',label:'Target tabungan (Rp)',max:1e12},{key:'saved',label:'Tabungan saat ini (Rp)',max:1e12},{key:'monthly',label:'Rencana bulanan (Rp)',max:1e12},{key:'months',label:'Jangka waktu (bulan)',max:1200}],
+ freelancer:[{key:'projectIncome',label:'Pendapatan per project (Rp)',max:1e12},{key:'projects',label:'Project per bulan',max:1000},{key:'essential',label:'Kebutuhan wajib per bulan (Rp)',max:1e12},{key:'reserveMonths',label:'Cadangan untuk berapa bulan',max:24},{key:'reserveMonthly',label:'Rencana cadangan bulanan (Rp)',max:1e12}],
+ goal:[{key:'target',label:'Nominal target (Rp)',max:1e12},{key:'saved',label:'Progres saat ini (Rp)',max:1e12},{key:'monthly',label:'Rencana alokasi (Rp)',max:1e12},{key:'months',label:'Batas waktu rencana (bulan)',max:1200}]
+};
+export const plannerNames:Record<ToolKind,string>={budget:'Budget planner',savings:'Savings planner',freelancer:'Freelancer finance planner',goal:'Goal planner'};
+export function plannerInputSchema(kind:ToolKind){return z.object(Object.fromEntries(plannerFields[kind].map(f=>[f.key,z.number().int().min(f.key==='months'||f.key==='reserveMonths'?1:0).max(f.max)]))).strict();}
+export type PlannerResult={values:{label:string;value:number|null;unit:'rupiah'|'bulan'|'project'}[];notes:string[]};
+export function calculatePlanner(kind:ToolKind,raw:Record<string,number>):PlannerResult{
+ const p=plannerInputSchema(kind).parse(raw);
+ const values:PlannerResult['values']=[],notes:string[]=['Ini perencanaan dari inputmu, bukan jaminan atau data rekening. Tidak membuat transaksi atau mengubah saldo/goal.'];
+ const add=(label:string,value:number|null,unit:'rupiah'|'bulan'|'project'='rupiah')=>values.push({label,value,unit});
+ if(kind==='budget'){const remaining=p.income-p.essential-p.wants-p.saving;add('Sisa dana rencana',remaining);add('Total alokasi',p.essential+p.wants+p.saving);if(remaining<0)notes.push('Rencana melebihi pemasukan. Tinjau pengeluaran pilihan atau alokasi tabungan.');}
+ else if(kind==='freelancer'){const income=p.projectIncome*p.projects,minimum=p.essential+p.reserveMonthly;add('Perkiraan pemasukan',income);add('Pemasukan minimum untuk rencana',minimum);add('Target cadangan',p.essential*p.reserveMonths);add('Project minimum',p.projectIncome?Math.ceil(minimum/p.projectIncome):minimum===0?0:null,'project');add('Dana setelah kebutuhan dan cadangan',income-minimum);notes.push('Pendapatan project dianggap seluruhnya diterima bulan ini. Cadangan adalah target perencanaan, bukan uang yang sudah disisihkan.');if(p.projectIncome===0)notes.push('Isi pendapatan per project untuk memperkirakan jumlah project minimum.');}
+ else {const remaining=Math.max(0,p.target-p.saved);add('Dana yang masih diperlukan',remaining);add('Alokasi untuk jangka waktu rencana',Math.ceil(remaining/p.months));add('Perkiraan waktu dengan alokasi saat ini',remaining===0?0:p.monthly===0?null:Math.ceil(remaining/p.monthly),'bulan');add('Selisih alokasi terhadap rencana',p.monthly-Math.ceil(remaining/p.months));notes.push('Alokasi dianggap tetap setiap bulan, tanpa bunga/imbal hasil. Dana untuk alokasi belum diverifikasi.');if(!remaining)notes.push('Target sudah tercapai.');else if(!p.monthly)notes.push('Alokasi nol belum menghasilkan estimasi waktu.');}
+ return {values,notes};
+}
+export function plannerCsv(kind:ToolKind,inputs:Record<string,number>,result:PlannerResult){const cell=(v:string|number)=>'"'+String(v).replaceAll('"','""')+'"';const rows:(string|number)[][]=[['Planner',plannerNames[kind]],['Bagian','Label','Nilai','Satuan'],...plannerFields[kind].map(f=>['Input',f.label,inputs[f.key],'']),...result.values.map(v=>['Hasil',v.label,v.value===null?'Belum dapat diperkirakan':v.value,v.unit]),...result.notes.map(n=>['Asumsi',n,'',''])];return '\uFEFF'+rows.map(r=>r.map(cell).join(',')).join('\r\n');}

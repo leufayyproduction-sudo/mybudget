@@ -1,0 +1,2 @@
+import {notFound} from 'next/navigation';import Wordmark from '@/components/wordmark';import DigitalPlanner from '@/components/digital-planner';import {toolKinds,type ToolKind} from '@/lib/finance/planners';
+export default async function Page({params}:{params:Promise<{tool:string}>}){const {tool}=await params;if(!toolKinds.includes(tool as ToolKind))notFound();return <main className="admin-connect"><Wordmark/><DigitalPlanner tool={tool as ToolKind}/></main>;}

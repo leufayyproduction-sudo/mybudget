@@ -1,5 +1,10 @@
 # Progress My Budget
 
+## Sesi aktif — Digital tools, recurring/Forecast, verifikasi tersisa
+- [done] Empat planner lokal, migration 012: pemetaan produk terlindung, paid gate (tanpa bypass Pro), inputs tersimpan owner-RLS, hitung/CSV server. Produk seed inactive; checkout interactive tanpa file opsional tetap memerlukan QRIS resmi dan verifikasi manual.
+- [todo] Integrasi recurring Forecast dan migration 013; verifikasi live baru/parallel/expiry + HTTP tanpa browser. Tiga item Phase 2 tetap terbuka. Tidak deploy atau AI.
+- Sudah diuji: 48/48 unit tests planner dan regresi; TypeScript/build termasuk lint passed. SQL rollback template prepared; bukan PASS live. Halaman /tools (navigasi statis) ditambahkan sebelum build final nanti.
+
 ## Sesi aktif — Advanced insights dan Advanced reports saja
 - Recurring migration 010 terpasang dan uji PASS menurut pengguna; hasil ini user-reported, bukan eksekusi agen. Tidak mengulang slice recurring.
 - [done] Insights lokal: fungsi murni/ambang/prioritas/maksimal 5, abaikan per akun dengan RLS dan Pro gate; migration 011 + SQL rollback. 41/41 tests, TypeScript dan build termasuk lint passed.
