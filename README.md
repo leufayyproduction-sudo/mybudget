@@ -1,5 +1,30 @@
 # My Budget — Phase 1 dan Phase 2 bertahap
 
+## Serah terima Sesi B — urutan SQL manual
+Migration 001–005 sudah terpasang dan checkout dilaporkan PASS. **Jangan mengulang migration yang sudah terpasang.** Jalankan file lengkap di Supabase → SQL Editor → New query → Run, satu per satu:
+1. `supabase/migrations/006_admin_purchases.sql` — review pembelian, audit, otorisasi admin. Lewati jika sudah berhasil diterapkan.
+2. `supabase/migrations/007_product_settings.sql` — pengaturan produk/merchant, bucket file privat, hak unduh dan log.
+3. `supabase/migrations/008_site_content.sql` — draft, preview dan publish landing.
+4. Setelah migration, jalankan **secara manual** `supabase/admin-bootstrap.sql`. File ini mencari akun Auth `ahvscyyssy@gmail.com` yang emailnya telah dikonfirmasi, lalu memasukkannya ke admin_users secara idempotent. Jika akun belum ada, daftar dan konfirmasi dulu. Tidak memakai user_metadata untuk role, tidak mengaktifkan Premium. File ini belum dijalankan oleh agen.
+
+Masuk dengan akun admin tersebut di beranda website, lalu buka `/admin/connect`. Upload QRIS resmi melalui `/admin/settings` hanya setelah merchant dan verifikasi manual siap. CMS melalui `/admin/content`: simpan draft → buka preview → publish. Harga landing diambil dari katalog, bukan field harga CMS. Logo dapat diganti lewat aset tervalidasi atau memakai wordmark; icon tab tetap aset resmi awal.
+
+### Sudah diuji
+- Build akhir `.next-verify` lolos, termasuk lint dan TypeScript; 27/27 unit tests lolos (finance, checkout, admin, promo/upload, URL dan struktur CMS). Diff whitespace diperiksa.
+- Phase 1 RLS serta Sesi A checkout sudah lolos sebelumnya; hasil SQL pengguna dibedakan dari eksekusi API agen.
+- CMS disimpan pada commit `87cdee4`. Tidak ada browser, screenshot atau pengujian visual pada penutupan sesi ini.
+
+### Belum bisa diuji
+- Migration 006–008/SQL assertions Sesi B pada Supabase sungguhan belum terkonfirmasi. `verify:admin` masih blocked sebelum 006 diterapkan. SQL admin rollback disiapkan melalui `npm run verify:admin`; template pengaturan/CMS ada di `supabase/tests/product_settings.sql` dan `supabase/tests/site_content.sql`, memerlukan UUID dua akun uji khusus.
+- Persetujuan paralel, upload/download byte sungguhan, UI admin/preview/publish live, ekspor CSV akun Premium live, serta tampilan Sesi B 375/768/1280 belum diverifikasi. SQL berurutan bukan bukti persetujuan paralel.
+- Bootstrap admin belum dijalankan; QRIS merchant asli/pembayaran nyata dan deployment tidak dilakukan. Phase 2 keseluruhan belum dinyatakan lolos; jangan mulai Phase 3 sebelum verifikasi lengkap.
+
+### Keputusan yang diambil
+- Role admin hanya dari admin_users. Halaman memakai cookie access-token HttpOnly yang berumur pendek, diperiksa lagi di server; setiap API/RPC memeriksa role. Tidak ada service-role key.
+- Review mengunci pesanan, menserialkan perpanjangan pengguna, memakai source_order_id unik, dan audit append-only. Pendapatan hanya status paid; tools dipisahkan dari langganan. Tidak ada policy admin pada transactions/budgets/goals.
+- QRIS diunggah apa adanya; bukti dan file berbayar privat, signed URL 60 detik. Harga lama tetap snapshot. Early Access bukan lifetime; tools interaktif dan analitik Phase 3 masih Segera hadir.
+- CMS memakai field terstruktur, validasi zod/database, revision untuk konflik edit, publik hanya membaca versi terbit, fallback default bila belum ada. Hosting komersial tetap mengikuti bagian "Hosting untuk penggunaan komersial"; tidak ada deploy produksi.
+
 Website personal finance Indonesia. Phase 1 tersedia; Phase 2 sedang dilengkapi: paket/entitlement, laporan, ekspor CSV dan checkout manual. Admin/pengaturan/CMS adalah Sesi B. Tidak ada pembayaran otomatis, deployment, atau Phase 3.
 
 ## Checkout manual — Phase 2 Sesi A

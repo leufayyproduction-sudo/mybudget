@@ -1,17 +1,32 @@
 # Progress My Budget
 
 ## Sesi aktif — Phase 2 Sesi B, admin/pengaturan/CMS
-- Pengguna mengizinkan Phase 2 keseluruhan; lanjut slice checkout manual dari fondasi paket/entitlement yang lolos. Berhenti di akhir Sesi A; Sesi B terpisah.
+- Pengguna meminta penutupan Sesi B mode hemat: commit CMS, bootstrap admin manual, urutan migration dan dokumentasi. Berhenti sesudah serah terima; tanpa browser/visual dan tanpa Phase 3.
 - [done] Implementasi checkout/pesanan: katalog produk, snapshot server, status pending/submitted/expired, bukti privat, riwayat. Migration 005 live dan verifikasi API passed; assertions SQL dilaporkan PASS oleh pengguna.
 - QRIS resmi belum tersedia: jangan menerima pembayaran atau membuat pesanan yang tak bisa dibayar. Tidak deploy.
 - [done] Verifikasi Phase 1 Supabase sungguhan: passed, cleanup passed (2026-10-02); laporan lokal diperiksa.
 - [done] Sesi A: Reports → produk/entitlement → checkout manual
-- [doing] Sesi B: admin → pengaturan produk/QRIS → CMS → verifikasi (pengguna meminta mulai)
+- [done] Implementasi Sesi B: admin → produk/QRIS → CMS. Commit admin 50df885; pengaturan f59e9be; CMS 87cdee4.
+- [todo] Verifikasi live lengkap Sesi B: tidak dinyatakan lolos sampai migration dan seluruh pengujian wajib selesai.
 - [done] Implementasi slice admin: migration 006, halaman/admin API terproteksi, audit, review atomik/idempotent, renewal serial. 23 tests, TypeScript dan production build termasuk lint lolos.
 - Belum bisa diuji slice admin: migration 006 live, assertions SQL dan persetujuan paralel. npm run verify:admin menyiapkan .rls-admin-test.sql; API masih blocked sebelum migration diterapkan. Admin nyata/QRIS merchant belum dikonfigurasi.
 - [done] Implementasi slice pengaturan: migration 007, katalog/promo/QRIS global/per produk, validasi aset, file privat dengan paid check dan log; 25 unit tests, TypeScript dan production build termasuk lint lolos. QRIS merchant asli tidak tersedia; migration/SQL live masih belum diuji.
 - [done] Implementasi CMS: migration 008, zod + validasi database, draft/revision, preview admin, publish + audit, landing katalog dan logo terpusat. Build akhir termasuk lint/TypeScript lolos; 27/27 unit tests lolos. Verifikasi database live CMS masih pending.
 - Phase 3 tidak dimulai. Tidak ada pembayaran nyata atau deployment.
+
+### Sudah diuji — penutupan Sesi B
+- Build akhir .next-verify termasuk lint/TypeScript lolos; satu test penuh akhir 27/27 passed. Diff whitespace lolos. Tidak menjalankan ulang pengujian visual sesuai instruksi mode hemat.
+- Gate Phase 1 RLS dan Sesi A checkout telah lolos pada sesi sebelumnya. Perubahan laporan RLS pengguna tidak ikut commit CMS.
+
+### Belum bisa diuji — penutupan Sesi B
+- Migration 006/007/008 live, assertions SQL admin/pengaturan/CMS, approval paralel, upload/download nyata, CSV Premium live, UI admin dan tampilan 375/768/1280 masih pending.
+- Admin bootstrap belum dijalankan; merchant QRIS asli, pembayaran sungguhan dan deployment tidak dilakukan.
+
+### Keputusan yang diambil — penutupan Sesi B
+- Bootstrap manual supabase/admin-bootstrap.sql hanya untuk akun Auth ahvscyyssy@gmail.com yang terdaftar dan dikonfirmasi; idempotent, tanpa role metadata dan tanpa aktivasi Premium.
+- Urutan SQL tersisa: 006_admin_purchases.sql → 007_product_settings.sql → 008_site_content.sql → admin-bootstrap.sql. Lewati file migration yang sudah diterapkan; bootstrap bukan migration otomatis.
+- Draft berversi terpisah dari publik; validasi URL/aset, preview admin, publish + audit. Pricing dari katalog. File tools privat setelah paid; fitur interaktif Phase 3 belum dibuat.
+- Langkah berikutnya: pengguna menerapkan SQL manual, kemudian verifikasi live Sesi B dalam sesi lanjutan. Berhenti sekarang sesuai instruksi; Phase 2 keseluruhan belum lolos dan Phase 3 tidak dimulai.
 
 ### Checkout — serah terima Sesi A
 - [done] Migration 005: products, orders, confirmations, entitlements, admin_users terproteksi, payment_settings, bucket bukti privat. RPC mengambil harga katalog, mengunci pesanan, dan konfirmasi tidak memberi paket.
