@@ -10,6 +10,7 @@
 - [done] Implementasi slice admin: migration 006, halaman/admin API terproteksi, audit, review atomik/idempotent, renewal serial. 23 tests, TypeScript dan production build termasuk lint lolos.
 - Belum bisa diuji slice admin: migration 006 live, assertions SQL dan persetujuan paralel. npm run verify:admin menyiapkan .rls-admin-test.sql; API masih blocked sebelum migration diterapkan. Admin nyata/QRIS merchant belum dikonfigurasi.
 - [done] Implementasi slice pengaturan: migration 007, katalog/promo/QRIS global/per produk, validasi aset, file privat dengan paid check dan log; 25 unit tests, TypeScript dan production build termasuk lint lolos. QRIS merchant asli tidak tersedia; migration/SQL live masih belum diuji.
+- [done] Implementasi CMS: migration 008, zod + validasi database, draft/revision, preview admin, publish + audit, landing katalog dan logo terpusat. Build akhir termasuk lint/TypeScript lolos; 27/27 unit tests lolos. Verifikasi database live CMS masih pending.
 - Phase 3 tidak dimulai. Tidak ada pembayaran nyata atau deployment.
 
 ### Checkout — serah terima Sesi A
