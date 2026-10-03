@@ -1,5 +1,13 @@
 # Progress My Budget
 
+## Phase 3 Sesi A — izin terbaru pengguna
+- [doing] Financial health; [todo] Forecast; [todo] Goal projection. Sesi B dan AI tidak dikerjakan.
+- Pengecualian gate eksplisit: RLS dan entitlement sudah lolos; tiga item Phase 2 tidak menghalangi Sesi A.
+- Masih terbuka (tidak dikerjakan sekarang): CSV Premium positif, deteksi referensi duplikat, UI admin.
+- Tanpa browser/screenshot; migration baru tetap perlu diterapkan sebelum verifikasi live fitur baru.
+- [done] Slice Financial health: rumus murni, minimum 2 bulan penuh + budget/pemasukan/pengeluaran; UI asumsi, RPC Pro security invoker + owner filter. 29/29 tests, TypeScript dan build termasuk lint passed. Test awal sandbox ENOMEM; eksekusi ulang di luar sandbox passed.
+- Belum diuji: migration 009/live Pro dan expiry baru; bukan klaim fitur live. Bobot freelance 30/30/25/15, tetap 40/30/30; referensi surplus 20%, cadangan 3 bulan.
+
 ## Sesi aktif — Phase 2 Sesi B, admin/pengaturan/CMS
 - Pengguna meminta verifikasi live Sesi B setelah migration 006–008 dan bootstrap selesai. Tanpa browser/screenshot, output dibatasi; Phase 3 tidak dimulai.
 - [done] Implementasi checkout/pesanan: katalog produk, snapshot server, status pending/submitted/expired, bukti privat, riwayat. Migration 005 live dan verifikasi API passed; assertions SQL dilaporkan PASS oleh pengguna.
