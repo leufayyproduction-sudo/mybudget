@@ -1,5 +1,15 @@
 # My Budget — Phase 1 dan Phase 2 bertahap
 
+## Kontak & bantuan
+
+Verifikasi lokal: 61 tes, lint, dan TypeScript lolos. Build belum lolos karena lingkungan kehabisan memori/kegagalan penulisan artefak; jalankan ulang sebelum rilis. Migration dan publish CMS live belum diuji.
+
+Halaman publik `/kontak` memakai WhatsApp bawaan 6288806001355. Nomor, pesan awal, dan jam balasan diatur pada **Kontak & bantuan** di `/admin/content`: simpan draft → preview → publish. Nilai publik membaca published, bukan draft. Jam bawaan “Jam balasan belum ditetapkan.”; isi jadwal dan zona waktu yang sebenarnya.
+
+Jalankan `supabase/migrations/015_support_content.sql` setelah migration CMS 008; login admin memakai 014. Migration idempotent menambah validasi support, mengisi hanya field yang belum ada dan menaikkan revision draft yang berubah. Tidak mempublikasikan draft atau menimpa nomor yang telah diatur. Jalankan `supabase/tests/support_content.sql` utuh di SQL Editor hingga PASS (rollback); sebelum migration, konten legacy memakai fallback defaults.
+
+Bantuan ada di footer landing, Pengaturan, checkout/riwayat pembelian. Pesan checkout hanya menambahkan ID pesanan dan nama produk, tanpa email/nominal/transaksi. Semua tautan WhatsApp dipicu klik pengguna, tidak fetch/pesan otomatis. Floating bantuan hanya dashboard pengguna login, bukan demo, dan berada di atas FAB/nav mobile. Nomor harus 62xxxxxxxxxx digits-only (10–15 digits), pesan maksimal 300 dan jam maksimal 120 karakter. URL selalu wa.me dan query di-encode; referrer tidak dikirim. Verifikasi live/visual dan WhatsApp nyata belum dilakukan; tidak deploy.
+
 ## Login admin langsung
 
 Buka `/admin/login`, isi email/password akun Supabase yang telah ditambahkan pemilik ke admin_users. Tidak perlu login aplikasi utama. `/admin/connect` menjadi redirect. Server memverifikasi password melalui Supabase Auth, lalu is_admin; non-admin langsung sign out dari sesi login khusus tersebut dan mendapat pesan identik dengan password salah. Tidak ada role dari user_metadata atau UI untuk menaikkan role.

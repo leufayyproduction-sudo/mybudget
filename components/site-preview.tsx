@@ -1,3 +1,4 @@
 'use client';
 import Link from 'next/link';import Landing from './landing';import {type SiteContent,type PublicProduct} from '@/lib/site-content';
-export default function SitePreview({content,products}:{content:SiteContent;products:PublicProduct[]}){return <><div className="cms-preview-actions"><Link className="button secondary" href="/admin/content">Kembali ke editor</Link></div><Landing content={content} products={products} start={()=>{}} login={()=>{}} demo={()=>{}} preview/></>;}
+import {whatsappLink} from '@/lib/support';
+export default function SitePreview({content,products}:{content:SiteContent;products:PublicProduct[]}){return <><div className="cms-preview-actions"><Link className="button secondary" href="/admin/content">Kembali ke editor</Link></div><section className="panel contact-page"><h2>Preview kontak & bantuan</h2><p>Jam balasan: {content.support.hours}</p><p>{content.support.message}</p><a href={whatsappLink(content.support)} target="_blank" rel="noopener noreferrer" referrerPolicy="no-referrer">Preview tautan WhatsApp</a></section><Landing content={content} products={products} start={()=>{}} login={()=>{}} demo={()=>{}} preview/></>;}

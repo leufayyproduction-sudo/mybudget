@@ -9,4 +9,5 @@ node_modules/
 !.env.example
 *.tsbuildinfo
 .next-verify-recurring/
+.next-support-check/
 .rls-*.log

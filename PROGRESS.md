@@ -1,5 +1,22 @@
 # Progress My Budget
 
+## Kontak & bantuan WhatsApp — 2026-10-04
+- [done] Source /kontak: kendala login/pembayaran/akses, jam balasan dari CMS, tombol wa.me dengan pesan awal, 5 FAQ. Nomor bawaan 6288806001355; tidak ada pengiriman otomatis.
+- [done] Bantuan di footer landing, Pengaturan aplikasi, checkout dan riwayat pembelian. Pesan konteks hanya order_number/product_name; email, nominal, bukti dan transaksi tidak ditambahkan. Link eksternal no-referrer/noopener; klik dan kirim dilakukan pengguna.
+- [done] Support provider membaca konten published; CMS admin field phone/message/hours + preview draft, publish tetap melalui alur/audit yang ada. Migration 015 menambah validasi DB/idempotent dan mengisi defaults yang belum ada tanpa mengganti setting admin atau menerbitkan draft; revision draft naik saat backfill.
+- [done] Tombol kecil keyboard/focus hanya dashboard pengguna login (bukan demo/landing/onboarding/halaman lain), mobile bottom 160px + safe area di atas FAB/nav. Tidak memakai API WhatsApp atau mengirim pesan.
+### Sudah diuji
+- 61/61 tes lolos dengan concurrency 1; lint dan TypeScript lolos. Tes nomor/URL memeriksa format Indonesia digits-only, batas input, escaping pesan dan hanya konteks pesanan.
+- Test awal paralel gagal alokasi memori (18 file worker gagal, bukan assertions fitur); diulang berurutan dengan concurrency 1. Tanpa browser/screenshot/deploy.
+### Belum bisa diuji
+- Build belum lolos: runner kehabisan memori; percobaan ulang folder lama gagal menulis artefak UNKNOWN, folder baru juga terhenti saat kompilasi akibat tekanan memori. Ulangi build saat RAM tersedia, jangan anggap siap rilis.
+- Migration 015/check constraints dan alur publish support Supabase live; template SQL rollback supabase/tests/support_content.sql siap, belum PASS SQL Editor. Visual 375/768/1280 dan membuka/mengirim WhatsApp tidak diuji sesuai instruksi.
+- Prasyarat admin login 014/verifikasi rilis dan Phase 3 dari bagian terdahulu tetap pending; fitur kontak tidak mengubah status tersebut.
+### Keputusan diambil
+- Config terpusat support.phone/message/hours di CMS, code defaults hanya fallback legacy. Nomor ^62[1-9][0-9]{7,12}$ (10–15 digits), pesan 1–300, jam balasan 1–120 karakter. Jam bawaan belum ditetapkan, tanpa janji respons palsu.
+- Tidak menerima URL WhatsApp bebas; helper selalu https://wa.me + nomor tervalidasi. Teks query di-encode. Floating button menuju /kontak, bukan membuka WhatsApp otomatis.
+- Langkah berikutnya: migration 015 setelah CMS 008 (admin login memerlukan 014), uji support_content.sql sampai PASS, edit draft di /admin/content → preview → publish. Jangan deploy.
+
 ## Login admin langsung — 2026-10-03
 - [done] Source /admin/login email/password Supabase Auth server; is_admin guard, generic error identik, non-admin signout lokal tanpa sesi admin. /admin/connect dan legacy session POST redirect login.
 - [done] Cookie admin HttpOnly/Strict/root path, Secure HTTPS, cap 8 jam/JWT expiry; logout seluruh halaman menghapus root + legacy /admin. Halaman/API tanpa JWT/role valid redirect login; cookie-only API, same-origin mutation, role recheck server. Pembelian/unggah tidak bergantung sesi aplikasi utama.
