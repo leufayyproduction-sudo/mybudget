@@ -3,6 +3,7 @@ node_modules/
 .next-verify/
 .next-preview/
 .rls-*.sql
+.rls-*.json
 .env*
 .env.local
 !.env.example

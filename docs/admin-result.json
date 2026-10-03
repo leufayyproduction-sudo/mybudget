@@ -1,6 +1,6 @@
 {
   "status": "blocked",
-  "checked_at": "2026-10-02T22:54:20.973Z",
+  "checked_at": "2026-10-03T09:35:49.044Z",
   "checks": [
     {
       "label": "Dua akun berbeda",
@@ -9,6 +9,26 @@
     {
       "label": "Akun uji bukan admin",
       "passed": true
+    },
+    {
+      "label": "Non-admin ditolak: admin_purchase_summary",
+      "passed": true
+    },
+    {
+      "label": "Non-admin ditolak: admin_list_orders",
+      "passed": true
+    },
+    {
+      "label": "Non-admin ditolak: admin_review_order",
+      "passed": true
+    },
+    {
+      "label": "Audit tidak terbaca non-admin",
+      "passed": true
+    },
+    {
+      "label": "Akun uji bukan admin",
+      "passed": false
     }
   ],
   "sql": "pending",

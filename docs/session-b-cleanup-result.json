@@ -1,0 +1,58 @@
+{
+  "status": "passed",
+  "checked_at": "2026-10-03T09:49:15.576Z",
+  "checks": [
+    {
+      "label": "Manifest accounts match existing authorized accounts",
+      "passed": true
+    },
+    {
+      "label": "Existing admin role preserved",
+      "passed": true
+    },
+    {
+      "label": "Test orders removed",
+      "passed": true
+    },
+    {
+      "label": "Test payment_confirmations removed",
+      "passed": true
+    },
+    {
+      "label": "Test entitlements removed",
+      "passed": true
+    },
+    {
+      "label": "Test products removed",
+      "passed": true
+    },
+    {
+      "label": "Test download_logs removed",
+      "passed": true
+    },
+    {
+      "label": "Test audit_logs removed",
+      "passed": true
+    },
+    {
+      "label": "Test buyer returned to Free",
+      "passed": true
+    },
+    {
+      "label": "Test proof object no longer downloadable",
+      "passed": true
+    },
+    {
+      "label": "Test digital object no longer downloadable",
+      "passed": true
+    },
+    {
+      "label": "CMS rollback left no test draft or publication",
+      "passed": true
+    },
+    {
+      "label": "Temporary cleanup function removed",
+      "passed": true
+    }
+  ]
+}

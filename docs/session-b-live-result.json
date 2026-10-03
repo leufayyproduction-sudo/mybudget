@@ -1,0 +1,258 @@
+{
+  "status": "passed_selected_checks",
+  "checked_at": "2026-10-03T09:45:15.288Z",
+  "checks": [
+    {
+      "label": "One existing admin and one non-admin",
+      "passed": true
+    },
+    {
+      "label": "Ordinary account has no personal profile",
+      "passed": true
+    },
+    {
+      "label": "Ordinary account has no pre-existing transactions",
+      "passed": true
+    },
+    {
+      "label": "Ordinary account has no pre-existing budgets",
+      "passed": true
+    },
+    {
+      "label": "Ordinary account has no pre-existing goals",
+      "passed": true
+    },
+    {
+      "label": "Non-admin RPC denied: admin_purchase_summary",
+      "passed": true
+    },
+    {
+      "label": "Non-admin RPC denied: admin_list_orders",
+      "passed": true
+    },
+    {
+      "label": "Non-admin RPC denied: admin_review_order",
+      "passed": true
+    },
+    {
+      "label": "Non-admin RPC denied: admin_save_product",
+      "passed": true
+    },
+    {
+      "label": "Non-admin RPC denied: admin_save_payment_settings",
+      "passed": true
+    },
+    {
+      "label": "Non-admin RPC denied: admin_record_asset",
+      "passed": true
+    },
+    {
+      "label": "Non-admin RPC denied: admin_save_site_draft",
+      "passed": true
+    },
+    {
+      "label": "Non-admin RPC denied: admin_publish_site",
+      "passed": true
+    },
+    {
+      "label": "Non-admin cannot read audit_logs",
+      "passed": true
+    },
+    {
+      "label": "Non-admin cannot read site_content_draft",
+      "passed": true
+    },
+    {
+      "label": "Ordinary user cannot grant own admin role",
+      "passed": true
+    },
+    {
+      "label": "Ordinary user cannot write status or price snapshot",
+      "passed": true
+    },
+    {
+      "label": "Ordinary user cannot create own entitlement",
+      "passed": true
+    },
+    {
+      "label": "Admin cannot delete audit logs directly",
+      "passed": true
+    },
+    {
+      "label": "Anonymous draft read denied",
+      "passed": true
+    },
+    {
+      "label": "Admin can read draft",
+      "passed": true
+    },
+    {
+      "label": "Admin cannot read another user's transactions",
+      "passed": true
+    },
+    {
+      "label": "Admin cannot update another user's transactions",
+      "passed": true
+    },
+    {
+      "label": "Admin cannot read another user's budgets",
+      "passed": true
+    },
+    {
+      "label": "Admin cannot update another user's budgets",
+      "passed": true
+    },
+    {
+      "label": "Admin cannot read another user's goals",
+      "passed": true
+    },
+    {
+      "label": "Admin cannot update another user's goals",
+      "passed": true
+    },
+    {
+      "label": "Non-admin HTTP denied: /api/admin/purchases",
+      "passed": true
+    },
+    {
+      "label": "Non-admin HTTP denied: /api/admin/settings",
+      "passed": true
+    },
+    {
+      "label": "Non-admin HTTP denied: /api/admin/content",
+      "passed": true
+    },
+    {
+      "label": "Non-admin HTTP denied: /api/admin/proof",
+      "passed": true
+    },
+    {
+      "label": "Non-admin mutation HTTP denied: /api/admin/purchases",
+      "passed": true
+    },
+    {
+      "label": "Non-admin mutation HTTP denied: /api/admin/settings",
+      "passed": true
+    },
+    {
+      "label": "Non-admin mutation HTTP denied: /api/admin/content",
+      "passed": true
+    },
+    {
+      "label": "Non-admin page server denied: /admin",
+      "passed": true
+    },
+    {
+      "label": "Non-admin page server denied: /admin/settings",
+      "passed": true
+    },
+    {
+      "label": "Non-admin page server denied: /admin/content",
+      "passed": true
+    },
+    {
+      "label": "Non-admin page server denied: /admin/content/preview",
+      "passed": true
+    },
+    {
+      "label": "Free CSV rejected at server",
+      "passed": true
+    },
+    {
+      "label": "Unpaid digital download rejected at server",
+      "passed": true
+    },
+    {
+      "label": "Manifest matches authorized test accounts",
+      "passed": true
+    },
+    {
+      "label": "Four explicit TEST ONLY orders exist",
+      "passed": true
+    },
+    {
+      "label": "Parallel approval: reviewed once and already_paid once",
+      "passed": true
+    },
+    {
+      "label": "Parallel approval produces exactly one entitlement",
+      "passed": true
+    },
+    {
+      "label": "Repeated approval is idempotent",
+      "passed": true
+    },
+    {
+      "label": "Repeated approval does not extend expiry",
+      "passed": true
+    },
+    {
+      "label": "Only one approval audit entry",
+      "passed": true
+    },
+    {
+      "label": "Second order approved",
+      "passed": true
+    },
+    {
+      "label": "Second order retry idempotent",
+      "passed": true
+    },
+    {
+      "label": "Renewal starts at previous expiry and adds 30 days",
+      "passed": true
+    },
+    {
+      "label": "Existing proof bytes cannot be read via public URL",
+      "passed": true
+    },
+    {
+      "label": "Anonymous proof download denied",
+      "passed": true
+    },
+    {
+      "label": "Owner reads exact test proof",
+      "passed": true
+    },
+    {
+      "label": "Admin short-lived proof signed URL works",
+      "passed": true
+    },
+    {
+      "label": "Confirmation is submitted, not paid",
+      "passed": true
+    },
+    {
+      "label": "Confirmation grants no entitlement",
+      "passed": true
+    },
+    {
+      "label": "Unpaid fixture file rejected",
+      "passed": true
+    },
+    {
+      "label": "Paid fixture file grants correct private path",
+      "passed": true
+    },
+    {
+      "label": "Paid file has no public download URL",
+      "passed": true
+    },
+    {
+      "label": "Paid buyer signed download succeeds",
+      "passed": true
+    },
+    {
+      "label": "Public published content unchanged by live tests",
+      "passed": true
+    }
+  ],
+  "cleanup": "passed",
+  "fixtures": "removed",
+  "not_tested": [
+    "CMS application publish through HTTP/browser was not tested; owner SQL result recorded separately",
+    "visual and merchant/payment tests excluded"
+  ],
+  "real_payments": "not_performed",
+  "helper_cleanup": "passed; independently confirmed in docs/session-b-cleanup-result.json"
+}

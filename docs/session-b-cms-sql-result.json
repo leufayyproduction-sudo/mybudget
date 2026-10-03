@@ -1,0 +1,9 @@
+{
+  "status": "passed_reported_by_user",
+  "source": "User replied CMS PASS and setup READY in this conversation",
+  "script": ".rls-session-b-cms-test.sql (generated locally and gitignored)",
+  "executed_by_agent": false,
+  "covers": ["temporary draft unreadable by non-admin and anonymous", "published content unchanged before publish", "publish checks existing admin", "test transaction includes rollback"],
+  "fixture_setup": "READY reported by user; four TEST orders subsequently confirmed through live API",
+  "real_payment": "none"
+}

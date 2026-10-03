@@ -1,18 +1,45 @@
 # Progress My Budget
 
 ## Sesi aktif — Phase 2 Sesi B, admin/pengaturan/CMS
-- Pengguna meminta penutupan Sesi B mode hemat: commit CMS, bootstrap admin manual, urutan migration dan dokumentasi. Berhenti sesudah serah terima; tanpa browser/visual dan tanpa Phase 3.
+- Pengguna meminta verifikasi live Sesi B setelah migration 006–008 dan bootstrap selesai. Tanpa browser/screenshot, output dibatasi; Phase 3 tidak dimulai.
 - [done] Implementasi checkout/pesanan: katalog produk, snapshot server, status pending/submitted/expired, bukti privat, riwayat. Migration 005 live dan verifikasi API passed; assertions SQL dilaporkan PASS oleh pengguna.
 - QRIS resmi belum tersedia: jangan menerima pembayaran atau membuat pesanan yang tak bisa dibayar. Tidak deploy.
 - [done] Verifikasi Phase 1 Supabase sungguhan: passed, cleanup passed (2026-10-02); laporan lokal diperiksa.
 - [done] Sesi A: Reports → produk/entitlement → checkout manual
 - [done] Implementasi Sesi B: admin → produk/QRIS → CMS. Commit admin 50df885; pengaturan f59e9be; CMS 87cdee4.
-- [todo] Verifikasi live lengkap Sesi B: tidak dinyatakan lolos sampai migration dan seluruh pengujian wajib selesai.
+- [done] Verifikasi live yang diminta sesi ini: non-admin, idempotensi/paralel, isolasi finance admin, storage privat, draft CMS dan cleanup. Verifikasi visual/merchant dan sisa checklist Phase 2 belum dinyatakan lengkap.
 - [done] Implementasi slice admin: migration 006, halaman/admin API terproteksi, audit, review atomik/idempotent, renewal serial. 23 tests, TypeScript dan production build termasuk lint lolos.
-- Belum bisa diuji slice admin: migration 006 live, assertions SQL dan persetujuan paralel. npm run verify:admin menyiapkan .rls-admin-test.sql; API masih blocked sebelum migration diterapkan. Admin nyata/QRIS merchant belum dikonfigurasi.
+- Status admin terbaru ada pada hasil live di bawah: migration/RPC tersedia, non-admin ditolak, review ulang/paralel dan renewal passed. Verifier lama mengasumsikan dua non-admin; hasil blocked lama bukan status akhir. QRIS merchant nyata belum diuji.
 - [done] Implementasi slice pengaturan: migration 007, katalog/promo/QRIS global/per produk, validasi aset, file privat dengan paid check dan log; 25 unit tests, TypeScript dan production build termasuk lint lolos. QRIS merchant asli tidak tersedia; migration/SQL live masih belum diuji.
-- [done] Implementasi CMS: migration 008, zod + validasi database, draft/revision, preview admin, publish + audit, landing katalog dan logo terpusat. Build akhir termasuk lint/TypeScript lolos; 27/27 unit tests lolos. Verifikasi database live CMS masih pending.
+- [done] Implementasi CMS: migration 008, zod + validasi database, draft/revision, preview admin, publish + audit, landing katalog dan logo terpusat. Build akhir termasuk lint/TypeScript lolos; 27/27 unit tests lolos. SQL CMS rollback PASS dilaporkan pengguna; akses API live dan cleanup dikonfirmasi agen.
 - Phase 3 tidak dimulai. Tidak ada pembayaran nyata atau deployment.
+
+### Verifikasi live Sesi B — sedang berjalan
+- Migration 006–008 dan bootstrap dilaporkan sudah dijalankan pengguna. API live mengonfirmasi RPC/tabel admin dan CMS tersedia. Salah satu akun uji kini admin; role itu tidak dicabut atau ditingkatkan oleh agen.
+- Sudah diuji: penolakan non-admin pada 8 RPC admin, 4 API baca, 4 halaman server (/admin, settings, content, preview); admin tidak dapat membaca/mengubah fixture transaksi, budget dan goals pengguna lain; anonymous/non-admin tidak membaca tabel draft/audit. Free CSV dan unduhan tanpa paid ditolak server. Fixture finance dibersihkan: passed.
+- Laporan docs/session-b-live-result.json terbaru: passed_selected_checks, cleanup passed (file/order/entitlement fixture dihapus). Skrip verify:admin lama blocked karena mengasumsikan kedua akun non-admin; bukan kegagalan RLS. Verifier baru scripts/verify-session-b.mjs mengenali role yang ada tanpa mengubahnya.
+- Sudah diuji tambahan live: dua review paralel menghasilkan satu reviewed + satu already_paid, satu entitlement dan satu audit. Review ulang tidak mengubah expiry; pesanan kedua menambah 30 hari setelah expiry sebelumnya. Admin tidak dapat menghapus audit langsung; pengguna biasa tidak dapat menulis status/snapshot/entitlement atau role sendiri.
+- Sudah diuji storage live: byte PNG fixture tidak dapat diakses lewat URL publik/anon; pemilik dapat membaca byte yang sama dan admin signed URL 60 detik berhasil. Konfirmasi bukti tetap submitted tanpa entitlement. File CSV tool tanpa paid ditolak; setelah fixture paid, hak dan signed URL bekerja, URL publik ditolak. Seluruh fixture ini bukan pembayaran nyata.
+- CMS SQL: pengguna melaporkan PASS dan setup READY; provenance disimpan docs/session-b-cms-sql-result.json (bukan eksekusi SQL agen). Public content tetap identik sepanjang tes API. Helper cleanup sudah dihapus dan dikonfirmasi scripts/check-session-b-cleanup.mjs (docs/session-b-cleanup-result.json passed).
+- File SQL lokal gitignored disiapkan: .rls-session-b-cms-test.sql (rollback), .rls-session-b-setup.sql (empat pesanan TEST tanpa QRIS/pembayaran atau perubahan role), .rls-session-b-cleanup.sql (fixture/izin/helper khusus run ini). SQL setup belum dieksekusi agen. Manifest tidak mengandung password/key/JWT dan tetap gitignored.
+- [done] Cleanup akhir: orders, confirmations, entitlements, products, download/audit fixture tidak tersisa; dua objek file tidak dapat diunduh lagi; helper tidak ditemukan; akun uji kembali Free; role admin tetap aktif; CMS tidak menyisakan headline test.
+- Langkah berikutnya: berhenti setelah laporan sesi ini. Verifikasi visual/merchant dan sisa checklist Phase 2 hanya pada sesi yang diminta berikutnya; Phase 3 tidak dimulai.
+
+### Sudah diuji — hasil akhir live sesi ini
+- Live SDK/RPC + HTTP localhost tanpa browser: 8 RPC admin, API baca/mutasi, semua halaman admin/preview menolak non-admin; write role/status/snapshot/entitlement ditolak. Admin tidak membaca/mengubah transaksi, budget, goal pengguna lain dan tidak dapat menghapus audit secara langsung.
+- Dua approval bersamaan: tepat satu entitlement dan audit. Retry tidak memperpanjang lagi; pesanan kedua menambah 30 hari setelah expiry pertama. Konfirmasi bukti hanya submitted, tanpa entitlement.
+- Bukti PNG fixture: URL publik/anon ditolak, byte pemilik cocok, signed URL admin berhasil. Tools CSV: tanpa paid ditolak, sesudah fixture paid signed URL berfungsi, URL publik ditolak. Public content tidak berubah selama tes API.
+- CMS assertions SQL rollback dilaporkan PASS oleh pengguna (docs/session-b-cms-sql-result.json); API akhir memastikan headline test tidak tertinggal pada draft/published.
+- docs/session-b-live-result.json passed_selected_checks; docs/session-b-cleanup-result.json passed. Kedua skrip lint/sintaks lolos. Build/27 unit tests lolos sebelumnya; tidak diulang karena source aplikasi tidak berubah pada sesi verifikasi.
+
+### Belum bisa diuji — hasil akhir live sesi ini
+- Browser/screenshot/responsivitas dan interaksi UI admin tidak diuji sesuai instruksi. QRIS merchant asli, penerimaan pembayaran nyata dan deployment tidak dilakukan.
+- Expiry signed URL tidak ditunggu 60 detik; URL diminta dengan TTL 60 detik dan diuji saat masih valid. CSV Premium positif, deteksi referensi duplikat dan isolasi antardua pengguna biasa pada pembelian/storage belum diulang di sesi ini (checkout dua pengguna biasa telah lolos Sesi A).
+- Seluruh checklist Phase 2 belum dinyatakan lengkap; laporan mencakup pemeriksaan live yang diminta pada sesi ini. Phase 3 tidak dimulai.
+
+### Keputusan — verifikasi live
+- Public key, akun ordinary kosong dan admin yang sudah ada; tidak menaikkan/mencabut role, tanpa service role. Sign-out verifier scope local agar tidak menutup sesi browser akun yang sama.
+- Empat order TEST dari SQL pemilik, tanpa QRIS/pembayaran; izin delete storage hanya dua path acak fixture dan helper hanya dapat dipanggil admin yang ditetapkan. Semua data/helper telah dihapus; SQL/manifest lokal gitignored dan tanpa key/password/JWT.
 
 ### Sudah diuji — penutupan Sesi B
 - Build akhir .next-verify termasuk lint/TypeScript lolos; satu test penuh akhir 27/27 passed. Diff whitespace lolos. Tidak menjalankan ulang pengujian visual sesuai instruksi mode hemat.
@@ -23,7 +50,7 @@
 - Admin bootstrap belum dijalankan; merchant QRIS asli, pembayaran sungguhan dan deployment tidak dilakukan.
 
 ### Keputusan yang diambil — penutupan Sesi B
-- Bootstrap manual supabase/admin-bootstrap.sql hanya untuk akun Auth ahvscyyssy@gmail.com yang terdaftar dan dikonfirmasi; idempotent, tanpa role metadata dan tanpa aktivasi Premium.
+- Bootstrap manual supabase/admin-bootstrap.sql hanya untuk akun Auth leufayyproduction@gmail.com yang terdaftar dan dikonfirmasi; idempotent, tanpa role metadata dan tanpa aktivasi Premium.
 - Urutan SQL tersisa: 006_admin_purchases.sql → 007_product_settings.sql → 008_site_content.sql → admin-bootstrap.sql. Lewati file migration yang sudah diterapkan; bootstrap bukan migration otomatis.
 - Draft berversi terpisah dari publik; validasi URL/aset, preview admin, publish + audit. Pricing dari katalog. File tools privat setelah paid; fitur interaktif Phase 3 belum dibuat.
 - Langkah berikutnya: pengguna menerapkan SQL manual, kemudian verifikasi live Sesi B dalam sesi lanjutan. Berhenti sekarang sesuai instruksi; Phase 2 keseluruhan belum lolos dan Phase 3 tidak dimulai.
