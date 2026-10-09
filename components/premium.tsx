@@ -13,7 +13,7 @@ export default function Premium({ user, reports }: {user:string;reports:()=>void
  async function exportCsv(){setError('');try{if(!supabase)throw new Error('Supabase belum tersedia.');const {data:{session}}=await supabase.auth.getSession();if(!session)throw new Error('Masuk untuk mengekspor transaksi.');const r=await fetch('/api/exports/transactions',{headers:{Authorization:`Bearer ${session.access_token}`},cache:'no-store'});if(!r.ok){const body=await r.json();throw new Error(body.error);}const url=URL.createObjectURL(await r.blob());const link=document.createElement('a');link.href=url;link.download='mybudget-transactions.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch(e){setError((e as Error).message);}}
  useEffect(()=>{let alive=true;async function load(){try{
   if(!supabase) return;
-  const r=await supabase.from('plans').select('*').order('price_rupiah');
+  const r=await supabase.from('plans').select('*').gt('price_rupiah',0).neq('code','free').order('price_rupiah');
   if(r.error) throw new Error('Katalog belum tersedia. Terapkan migration 004 lalu coba lagi.');
   const e=user==='demo'?null:await getEntitlement();
   if(alive){setPlans(r.data||[]);setEntitlement(e);}
