@@ -1,5 +1,15 @@
 # My Budget — Phase 1 dan Phase 2 bertahap
 
+## Produk berbayar dan ulasan pesanan
+
+Jalankan migration **016_paid_catalog.sql**, lalu **017_order_reviews.sql** setelah migration sebelumnya (termasuk 012 untuk digital_tool_products). Free tetap status default akun melalui trigger 004; tidak ada pembelian Free dan data pengguna lama dipertahankan. Katalog/checkout hanya menerima harga positif dari database. Review lama tidak dihapus, tetapi disembunyikan karena tidak memiliki pesanan terverifikasi. Kolom comment adalah proyeksi tersimpan dari body agar API ulasan lama tetap kompatibel.
+
+`paid` berarti pembayaran telah disetujui admin, bukan sekadar konfirmasi pembeli. Pemilik dapat menulis/mengedit satu ulasan per pesanan paid dari **Paket → Riwayat pembelian → Beri Ulasan / Edit ulasan**. Nama awal dari profil, dapat disamarkan; rating 1–5, komentar teks biasa 10–500. Kiriman/edit menjadi pending, dengan jeda 30 detik per pengguna di database. Tulisan dirender sebagai teks React, tanpa HTML. Tulisan publik hanya approved melalui RPC proyeksi tanpa user_id/order_id; akses tulis langsung tabel ditolak, semua mutasi lewat RPC terotorisasi.
+
+Admin membuka `/admin/reviews` untuk setujui/sembunyikan/hapus; cookie admin dan role database diperiksa kembali, mutasi memakai same-origin serta audit log. Publik melihat rata-rata, jumlah, tanggal, dan daftar terbaru pada beranda, 10 ulasan per halaman. Tidak ada data demo yang dianggap ulasan pembeli.
+
+Uji manual: daftar akun baru → pastikan Free otomatis dan tanpa kartu Rp0 → buat pesanan berbayar dengan QRIS merchant yang sudah dikonfigurasi → konfirmasi → admin verifikasi transaksi nyata lalu setujui → kirim ulasan → pastikan belum publik → setujui melalui `/admin/reviews` → lihat beranda → edit (kembali pending) → sembunyikan/hapus di admin. Akun kedua dan pesanan pending harus ditolak; ulang kiriman cepat harus dibatasi. Untuk uji tanpa pembayaran gunakan `supabase/tests/order_reviews.sql` utuh di SQL Editor (fresh fixtures dalam BEGIN/ROLLBACK, berakhir PASS). Belum dijalankan live oleh agen; jangan gunakan fixture sebagai klaim pembayaran nyata.
+
 ## Kontak & bantuan
 
 Verifikasi lokal: 61 tes, lint, dan TypeScript lolos. Build belum lolos karena lingkungan kehabisan memori/kegagalan penulisan artefak; jalankan ulang sebelum rilis. Migration dan publish CMS live belum diuji.

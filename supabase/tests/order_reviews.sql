@@ -1,0 +1,43 @@
+-- Run in SQL Editor after 016,017. Fresh fictional fixtures, no payment; all rolled back.
+begin;
+create function pg_temp.assert_true(ok boolean,label text) returns void language plpgsql as $$begin if ok is distinct from true then raise exception 'FAIL: %',label;end if;end$$;
+create function pg_temp.denied(q text) returns boolean language plpgsql as $$begin execute q;return false;exception when insufficient_privilege or invalid_parameter_value then return true;end$$;
+select set_config('test.a',gen_random_uuid()::text,true),set_config('test.b',gen_random_uuid()::text,true),set_config('test.admin',gen_random_uuid()::text,true),set_config('test.product',gen_random_uuid()::text,true),set_config('test.order',gen_random_uuid()::text,true),set_config('test.pending',gen_random_uuid()::text,true);
+insert into auth.users(id,instance_id,aud,role,email,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at)
+select id,'00000000-0000-0000-0000-000000000000'::uuid,'authenticated','authenticated',id::text||'@example.invalid',now(),'{"provider":"email","providers":["email"]}','{}',now(),now() from (values(current_setting('test.a')::uuid),(current_setting('test.b')::uuid),(current_setting('test.admin')::uuid)) f(id);
+insert into public.admin_users values(current_setting('test.admin')::uuid);
+insert into public.products(id,code,name,type,price_rupiah,duration_days,plan,active) values(current_setting('test.product')::uuid,'test-'||left(current_setting('test.product'),8),'TEST Plus','subscription',9900,30,'plus',false);
+insert into public.orders(id,order_number,user_id,product_id,request_id,product_name,product_type,price_rupiah,total_rupiah,duration_days,plan,merchant_name,qris_path,payment_instructions,status,expires_at)
+select id,'TEST-'||id,current_setting('test.a')::uuid,current_setting('test.product')::uuid,gen_random_uuid(),'TEST Plus','subscription',9900,9900,30,'plus','TEST NO PAYMENT','test/no-qris','NO PAYMENT',status,now()+interval '1 day' from (values(current_setting('test.order')::uuid,'paid'),(current_setting('test.pending')::uuid,'pending')) f(id,status);
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',current_setting('test.a'),'role','authenticated')::text,true);
+select pg_temp.assert_true(public.get_entitlement()->>'plan'='free','new account defaults Free without purchase');
+select pg_temp.assert_true(pg_temp.denied($q$select public.save_order_review(current_setting('test.pending')::uuid,5,'Komentar cukup panjang','Ak***a')$q$),'pending order cannot review');
+select public.save_order_review(current_setting('test.order')::uuid,5,'Membantu catatan pemasukan.','Ak***a');
+select pg_temp.assert_true((select count(*)=1 and min(status)='pending' from public.reviews where order_id=current_setting('test.order')::uuid),'one pending review');
+select pg_temp.assert_true(pg_temp.denied($q$update public.reviews set status='approved' where order_id=current_setting('test.order')::uuid$q$),'owner cannot approve directly');
+select pg_temp.assert_true(pg_temp.denied($q$select public.moderate_review((select id from public.reviews where order_id=current_setting('test.order')::uuid),'approved')$q$),'non-admin cannot moderate');
+do $$begin begin perform public.save_order_review(current_setting('test.order')::uuid,4,'Komentar baru cukup panjang','Ak***a');raise exception 'FAIL: rate limit';exception when raise_exception then if sqlerrm not like 'Tunggu 30 detik%' then raise;end if;end;end$$;
+select set_config('test.review',(select id::text from public.reviews where order_id=current_setting('test.order')::uuid),true);
+select set_config('request.jwt.claims',jsonb_build_object('sub',current_setting('test.b'),'role','authenticated')::text,true);
+select pg_temp.assert_true((select count(*)=0 from public.reviews where id=current_setting('test.review')::uuid),'B cannot read A pending review');
+select pg_temp.assert_true(pg_temp.denied($q$select public.save_order_review(current_setting('test.order')::uuid,5,'Komentar cukup panjang','Pengguna B')$q$),'B cannot edit A review');
+set local role anon;
+select set_config('request.jwt.claims','{}',true);
+select pg_temp.assert_true(not exists(select 1 from public.list_public_reviews(100) where id=current_setting('test.review')::uuid),'pending not public');
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',current_setting('test.admin'),'role','authenticated')::text,true);
+select public.moderate_review(current_setting('test.review')::uuid,'approved');
+select pg_temp.assert_true(exists(select 1 from public.list_public_reviews(100) where id=current_setting('test.review')::uuid),'approved public');
+select public.moderate_review(current_setting('test.review')::uuid,'hidden');
+select pg_temp.assert_true(not exists(select 1 from public.list_public_reviews(100) where id=current_setting('test.review')::uuid),'hidden not public');
+reset role;
+update public.review_attempts set attempted_at=now()-interval '1 minute' where user_id=current_setting('test.a')::uuid;
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',current_setting('test.a'),'role','authenticated')::text,true);
+select public.save_order_review(current_setting('test.order')::uuid,4,'Ulasan diperbarui pemiliknya.','Ak***a');
+select pg_temp.assert_true((select count(*)=1 and min(status)='pending' from public.reviews where order_id=current_setting('test.order')::uuid),'edit requeues same review');
+reset role;
+do $$begin begin insert into public.orders(order_number,user_id,product_id,request_id,product_name,product_type,price_rupiah,unique_amount,total_rupiah,merchant_name,qris_path,payment_instructions,expires_at) values('TEST-ZERO',current_setting('test.a')::uuid,current_setting('test.product')::uuid,gen_random_uuid(),'ZERO','subscription',0,1,1,'TEST','TEST','TEST',now());raise exception 'FAIL: zero-price order';exception when invalid_parameter_value then null;end;end$$;
+select 'PASS: Free default, zero-price rejection, paid-owner reviews, RLS, rate limit, moderation and edit; rollback removes fixtures' as result;
+rollback;

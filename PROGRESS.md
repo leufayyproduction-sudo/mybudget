@@ -1,5 +1,18 @@
 # Progress My Budget
 
+## Katalog berbayar & ulasan pesanan — 2026-10-09
+- [done] Source pricing/katalog hanya harga positif; Free tetap default subscriptions lewat trigger migration 004, tanpa menghapus akun/data. Migration 016 menonaktifkan produk nol dan menolak create_order/insert pesanan nol; admin productSchema sudah min 1.
+- [done] Source migration 017: satu review per paid order, owner-only RPC, 30 detik antar submit, pending saat edit, moderasi/audit admin, projection publik tanpa UUID pengguna/pesanan, pagination 10. Legacy review dipertahankan hidden tanpa pesanan.
+- [done] UI ulasan dari riwayat, form rating/nama/komentar 10–500, daftar publik dan admin /admin/reviews; profil sebagai nama awal, bisa disamarkan. Admin cookie/role/same-origin memakai guard yang ada.
+### Sudah diuji
+- 63/63 tes lolos (concurrency 1), TypeScript dan lint lolos; peringatan hook diperbaiki dan build production final lolos dengan satu worker. Tidak menambah dependency. Diff/check referensi Rp0 bersih pada source; Free di seed plans dipertahankan sengaja sebagai status akun.
+### Belum bisa diuji
+- Migration 016–017 dan SQL rollback order_reviews.sql di Supabase live, alur review/pembayaran end-to-end, visual mobile/tablet/desktop. Skrip memakai akun/produk/pesanan fiktif baru, role authenticated + JWT claims, hasil PASS/FAIL dan rollback; belum dieksekusi owner SQL.
+- Pembayaran nyata, QRIS merchant dan deployment tidak dijalankan. Status verifikasi terdahulu tidak berubah.
+### Keputusan diambil
+- Selesai = paid, bukan submitted. Tulisan berupa plain text (HTML ditolak), mutation via RPC bukan grant insert/update bebas. Comment generated dari body untuk kompatibilitas API. Admin daftar 100 terbaru; public pagination 10 dan ringkasan semua approved.
+- Migration 016 menjaga aturan digital_tool_products dari migration 012; tidak menimpa entitlement atau data pengguna. Langkah berikutnya: jalankan 016 lalu 017, SQL rollback hingga PASS, uji manual di README; jangan deploy sebelum verifikasi live.
+
 ## Pembaruan teks bantuan — 2026-10-04
 - [done] Judul, pengantar, tujuan kontak, catatan keamanan dan 5 FAQ diganti sesuai arahan. Default pesan “Halo My Budget, saya butuh bantuan.”; layanan setiap hari 08.00–21.00 WIB, pesan di luar jam dibalas paling lambat 1x24 jam.
 - [done] Checkout/riwayat memakai template {ID_PESANAN} ({NAMA_PRODUK}), substitusi hanya ID/nama produk. Pesan CMS tetap dapat diubah, termasuk memakai placeholder; setting tersimpan tidak ditimpa.
